@@ -1,20 +1,19 @@
-# Repo de la conferencia (producto final)
+# Repo de la conferencia (la presentación)
 
 Las instrucciones generales y el flujo de trabajo están en `../AGENTS.md`. Este archivo solo recoge lo técnico del repo.
 
 ## Remotes
-- `origin` → `aprendiendo-cosas/Conf_complejidad_montes_UPM` (este fork; aquí se publica).
-- `upstream` → `aprendiendo-cosas/Conf_ingenieria_regenerativa_UPM` (original; no se le hace push).
+- `origin` → `aprendiendo-cosas/Conf_complejidad_montes_UPM`. Aquí se publica.
+- `upstream` → `aprendiendo-cosas/Conf_ingenieria_regenerativa_UPM`. No se le hace push.
 - Rama de trabajo: `main`.
+- El repo es un fork de otra charla. Está pendiente de decidir si sigue siéndolo; lo decide el ponente.
 
-## Contenido actual (heredado del original)
-- `Conf_ingenieria_regenerativa_sistemas_complejos.md`: texto de la conferencia. **Es la fuente de verdad del contenido.**
-- `Conf_ingenieria_regenerativa_sistemas_complejos.html`: exportación de Typora, con comentarios Cusdis. Se sustituirá por la nueva web.
-- `presentacion/*.pptx`: diapositivas originales; solo como referencia.
-- `imagenes/`: imágenes que usa la web.
+## Contenido
+- Los archivos heredados (`.md`, `.html`, `presentacion/*.pptx`, `imagenes/`) son de otra charla y se sustituirán por la nueva presentación.
 
 ## Reglas
-- Durante la fase 1 (revisión temática) **no se modifica el repo**.
-- Cada imagen que entre en `imagenes/` debe estar anotada en `../preparacion/fuentes.md`.
-- Los commits y los push los hace el usuario con GitHub Desktop; Claude solo propone el mensaje. Hay que hacer push antes de cambiar de ordenador, porque el otro ordenador solo ve lo que está en GitHub.
-- Pendiente de decidir (fase 3): tecnología de la web (HTML estático o generador), si se mantiene Cusdis y la configuración de GitHub Pages. Cuando se decida, documentarlo aquí.
+- La presentación se construye cuando el hilo de `../hilo_argumental.md` esté maduro. Hasta entonces, el repo no se toca.
+- Cada imagen que entre en el repo debe estar anotada en `../figuras/fuentes.md`.
+- Los commits y los push los hace el usuario con GitHub Desktop; la IA solo propone el mensaje.
+- Hay que hacer push antes de cambiar de ordenador.
+- Pendiente de decidir: la tecnología de la web y la configuración de GitHub Pages. Cuando se decida, documentarlo aquí.
