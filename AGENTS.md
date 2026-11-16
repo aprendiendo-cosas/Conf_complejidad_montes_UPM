@@ -20,4 +20,11 @@ Las instrucciones generales y el flujo de trabajo están en `../AGENTS.md`. Este
 - Cada imagen que entre en el repo debe estar anotada en `../figuras/fuentes.md`.
 - Los commits y los push los hace el usuario con GitHub Desktop; la IA solo propone el mensaje.
 - Hay que hacer push antes de cambiar de ordenador.
-- Pendiente de decidir: la configuración de GitHub Pages. Cuando se decida, documentarlo aquí.
+
+## Publicación y forma de trabajo
+- **GitHub Pages:** se despliega desde la rama `main`, en la raíz del repo. Dirección prevista: https://aprendiendo-cosas.github.io/Conf_complejidad_montes_UPM/
+- **Modelo híbrido:**
+  - **Iterar en local:** servidor `python3 -m http.server 8765` sobre esta carpeta. Desde la app de Claude se arranca con la configuración `presentacion` de `../.claude/launch.json`.
+  - **Hitos:** commit y push → Pages. Sirve para verla desde otro dispositivo o compartirla.
+  - **Día de la charla:** se presenta desde el archivo local, sin depender del wifi; Pages queda como respaldo.
+- Todo lo que llega a `main` se publica. Las imágenes con licencia sin aclarar en `../figuras/fuentes.md` no deberían subirse.
