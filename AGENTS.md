@@ -9,11 +9,15 @@ Las instrucciones generales y el flujo de trabajo están en `../AGENTS.md`. Este
 - El repo es un fork de otra charla. Está pendiente de decidir si sigue siéndolo; lo decide el ponente.
 
 ## Contenido
-- Los archivos heredados (`.md`, `.html`, `presentacion/*.pptx`, `imagenes/`) son de otra charla y se sustituirán por la nueva presentación.
+- `index.html`: la presentación. Es un único archivo con HTML, SVG y JavaScript propio, sin librerías externas, y funciona sin conexión.
+  - Se avanza con →, la barra espaciadora, un clic o el mando; se retrocede con ←. La tecla `h` oculta el contador de pasos.
+  - El guion de pasos está en el array `STEPS` del script. Cada paso enciende o apaga capas, que se marcan en el SVG con el atributo `data-on`.
+  - Estado actual: prototipo de las escenas 1–4.
+- `Conf_ingenieria_regenerativa_sistemas_complejos.md`: **se conserva, no borrar.** Servirá para documentar el proceso y alojar la transcripción de la conferencia. El repo tendrá más material público aparte de la presentación. Su contenido actual procede de otra charla y el ponente lo irá sustituyendo.
+- `imagenes/portada.png`: **se conserva** hasta que el ponente la sustituya por la portada nueva.
 
 ## Reglas
-- La presentación se construye cuando el hilo de `../hilo_argumental.md` esté maduro. Hasta entonces, el repo no se toca.
 - Cada imagen que entre en el repo debe estar anotada en `../figuras/fuentes.md`.
 - Los commits y los push los hace el usuario con GitHub Desktop; la IA solo propone el mensaje.
 - Hay que hacer push antes de cambiar de ordenador.
-- Pendiente de decidir: la tecnología de la web y la configuración de GitHub Pages. Cuando se decida, documentarlo aquí.
+- Pendiente de decidir: la configuración de GitHub Pages. Cuando se decida, documentarlo aquí.
