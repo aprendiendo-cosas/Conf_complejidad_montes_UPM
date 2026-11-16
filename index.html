@@ -14,6 +14,7 @@
   .L { opacity: 0; transition: opacity 1s ease; pointer-events: none; }
   .L.on { opacity: 1; transition-delay: var(--d, 0s); }
   .Lslow { transition-duration: 2.2s; }
+  .Lvillage { transition-duration: 1.8s; }
 
   .pop { opacity: 0; transform: scale(.2); transform-box: fill-box; transform-origin: 50% 100%;
          transition: opacity .4s ease, transform .7s cubic-bezier(.3,1.6,.5,1); }
@@ -83,6 +84,12 @@
   <!-- ===== PAISAJE: fondo ilustrado + capas encima ===== -->
   <g id="landscape">
     <image href="imagenes/fondo_1_bosque.jpg" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>
+
+    <!-- pueblo: recorte de 2_bosque_pueblo.jpg (solo la zona que cambia, con borde difuminado).
+         Posición = recorte en px del original (x 1696, y 912, 1056×624) × escala 900/1536, desplazado -6.25 en x por el encuadre -->
+    <g class="L Lvillage" data-on="village">
+      <image href="imagenes/capa_2_pueblo.png" x="987.5" y="534.375" width="618.75" height="365.625"/>
+    </g>
 
     <!-- erosión: suelo desnudo y cárcavas en la ladera abierta de la derecha -->
     <g class="L Lslow" data-on="erosion">
@@ -184,7 +191,7 @@ function blob(cx, cy, rx, ry, jit = .22, n = 11) {
 const Z = {
   fire:    { cx: 840, cy: 520, rx: 150, ry: 115, label: 'incendio',    lx: 840,  ly: 372 },
   decline: { cx: 250, cy: 540, rx: 170, ry: 105, label: 'decaimiento', lx: 250,  ly: 680 },
-  erosion: { cx: 1390, cy: 500, rx: 150, ry: 95, label: 'erosión',     lx: 1390, ly: 375 },
+  erosion: { cx: 1350, cy: 505, rx: 140, ry: 65, label: 'erosión',     lx: 1350, ly: 405 },
 };
 $('#zFire').setAttribute('d', blob(Z.fire.cx, Z.fire.cy, Z.fire.rx, Z.fire.ry));
 $('#zDecline').setAttribute('d', blob(Z.decline.cx, Z.decline.cy, Z.decline.rx, Z.decline.ry));
@@ -194,10 +201,10 @@ $('#zErosion').setAttribute('d', blob(Z.erosion.cx, Z.erosion.cy, Z.erosion.rx, 
   // cárcavas: surcos que bajan por la ladera abierta
   const g = $('#gullies');
   for (let i = 0; i < 8; i++) {
-    let x = 1270 + i * 32 + rnd() * 14, y = 430 + rnd() * 25;
+    let x = Z.erosion.cx - 115 + i * 30 + rnd() * 12, y = Z.erosion.cy - 45 + rnd() * 20;
     let p = `M${x.toFixed(1)},${y.toFixed(1)}`;
-    const steps = 4 + Math.floor(rnd() * 3);
-    for (let k = 0; k < steps; k++) { x += -6 + (rnd() - .5) * 16; y += 24; p += ` L${x.toFixed(1)},${y.toFixed(1)}`; }
+    const steps = 3 + Math.floor(rnd() * 2);
+    for (let k = 0; k < steps; k++) { x += -6 + (rnd() - .5) * 14; y += 22; p += ` L${x.toFixed(1)},${y.toFixed(1)}`; }
     const w = 3 + rnd() * 3;
     el('path', { d: p, stroke: '#f0c99a', 'stroke-width': w + 3, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: .5 }, g);
     el('path', { d: p, stroke: '#6e4426', 'stroke-width': w, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g);
@@ -251,14 +258,14 @@ $('#zErosion').setAttribute('d', blob(Z.erosion.cx, Z.erosion.cy, Z.erosion.rx, 
   }
   // escala menor cuanto más arriba (más lejos) en la ladera
   const acts = [
-    { x: 1400, y: 655, s: 1.35, label: 'madera', draw: p => { person(p, '#c45a3c', 'axe');
+    { x: 1185, y: 520, s: 1.2, label: 'madera', draw: p => { person(p, '#c45a3c', 'axe');
         [[-22,-4],[-30,-4],[-26,-11]].forEach(([cx,cy]) => el('circle', { cx, cy, r: 4.5, fill: '#9a6b42', stroke: '#6b4b2b' }, p)); } },
     { x: 300, y: 380, s: 1.0, label: 'pastoreo', draw: p => { person(p, '#6d7f9a', 'staff');
         [[40,2],[70,-6],[95,6],[60,14],[125,0],[150,10],[30,20]].forEach(([sx,sy]) => sheep(p, sx, sy)); } },
     { x: 205, y: 790, s: 1.6, label: 'caza', draw: p => { person(p, '#5d6b3a', 'rifle');
         el('ellipse', { cx: -24, cy: -9, rx: 11, ry: 5, fill: '#8a5a33' }, p);
         el('circle', { cx: -34, cy: -13, r: 4, fill: '#8a5a33' }, p); } },
-    { x: 1440, y: 800, s: 1.5, label: 'setas', draw: p => person(p, '#a0628f', 'basket') },
+    { x: 700, y: 815, s: 1.5, label: 'setas', draw: p => person(p, '#a0628f', 'basket') },
     { x: 1085, y: 400, s: 1.0, label: 'ocio', draw: p => person(p, '#2f8fb0', 'run') },
   ];
   acts.forEach((a, i) => {
@@ -360,7 +367,8 @@ const STEPS = [
   { name: 'Portada', on: ['title'] },
   { name: '1 · ¿Qué veis?', off: ['title'], on: ['q1'] },
   { name: '1 · ¿Sabemos gestionarlo?', off: ['q1'], on: ['q2'] },
-  { name: '2 · Hay humanos', off: ['q2'], on: ['humans'] },
+  { name: '2 · El pueblo', off: ['q2'], on: ['village'] },
+  { name: '2 · Hay humanos', on: ['humans'] },
   { name: '3 · Incendio', on: ['fire'] },
   { name: '3 · Erosión', on: ['erosion'] },
   { name: '3 · Decaimiento', on: ['decline'] },
