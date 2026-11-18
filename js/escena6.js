@@ -10,7 +10,7 @@
   text(se, 800, 470, '«No era un bosque, sino un socioecosistema»', { 'text-anchor': 'middle', 'font-size': 62, 'font-weight': 700, fill: CREAM });
 
   // 6.5 · velo oscuro y rótulo arriba
-  el('rect', { width: 1600, height: 900, fill: '#1b1711', opacity: .96 }, layer(g6, 'wdim'));
+  { const v = layer(g6, 'wdim'); el('rect', { width: 1600, height: 900, fill: '#2b4a63', opacity: .3, style: 'mix-blend-mode:multiply' }, v); el('rect', { width: 1600, height: 900, fill: '#1b1711', opacity: .8 }, v); }
   const wt = layer(g6, 'wtitle');
   text(wt, 800, 150, 'Los problemas de los socioecosistemas', { 'text-anchor': 'middle', 'font-size': 58, 'font-weight': 700, fill: CREAM });
   text(wt, 800, 222, 'son perversos (wicked)', { 'text-anchor': 'middle', 'font-size': 58, 'font-weight': 700, fill: AMBER });

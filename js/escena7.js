@@ -31,16 +31,16 @@
   const dq = line(AQ), dr = layer(aqG, 'acequia', 'draw');
   el('path', { d: dq, stroke: '#2a1c10', 'stroke-width': 9, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: .55, pathLength: 1 }, dr);
   el('path', { d: dq, stroke: '#5fb8e8', 'stroke-width': 5, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', pathLength: 1 }, dr);
-  pill(layer(aqG, 'acequia', 'L', 1.2), 640, 578, 'Acequias como infraestructura de gestión', { size: 24 });
+  pill(layer(aqG, 'acequia', 'L', 1.2), 640, 578, 'Acequias como infraestructura de gestión', { size: 24 }).setAttribute('class', 'ptag');
 
   // 7.6 · dehesa: mancha verdosa dentro del triángulo ganado–caza–setas
   const dG = layer(g7, 'dehesa');
   const DH = [[330, 612], [430, 618], [520, 660], [610, 730], [590, 790], [470, 800], [330, 792], [250, 758], [255, 690], [285, 640]];
   el('path', { d: smooth(DH), fill: '#8fcf5a', opacity: .38, stroke: '#cdeea0', 'stroke-width': 3, 'stroke-opacity': .8 }, dG);
-  pill(dG, 430, 716, 'Dehesa', { size: 28 });
+  pill(dG, 430, 716, 'Dehesa', { size: 28 }).setAttribute('class', 'ptag');
 
   // 7.8–7.11 · pregunta y causas, sobre el paisaje velado (mismo estilo que 6.5–6.10)
-  el('rect', { width: 1600, height: 900, fill: '#1b1711', opacity: .96 }, layer(g7, 'qdim'));
+  { const v = layer(g7, 'qdim'); el('rect', { width: 1600, height: 900, fill: '#2b4a63', opacity: .3, style: 'mix-blend-mode:multiply' }, v); el('rect', { width: 1600, height: 900, fill: '#1b1711', opacity: .8 }, v); }
   text(layer(g7, 'qtitle'), 800, 190, '¿Por qué ya no nos sirven tan bien estas técnicas?', { 'text-anchor': 'middle', 'font-size': 56, 'font-weight': 700, fill: AMBER });
   ['El contexto climático está cambiando rápido.', 'El sistema económico se ha globalizado.', 'Estos métodos son difícilmente transferibles.']
     .forEach((s, i) => {

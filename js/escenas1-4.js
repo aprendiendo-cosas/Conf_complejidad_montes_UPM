@@ -51,8 +51,8 @@
   };
   const tag = (p, str, y = 14) => {
     const w = str.length * 10.5 + 22;
-    el('rect', { x: -w / 2, y, width: w, height: 25, rx: 12.5, fill: '#fffaf0', opacity: .92 }, p);
-    text(p, 0, y + 18, str, { 'text-anchor': 'middle', 'font-size': 16.5, 'font-weight': 600, fill: '#3c3a33' });
+    el('rect', { x: -w / 2, y, width: w, height: 25, rx: 12.5, fill: '#fffaf0', opacity: .92, class: 'ptag' }, p);
+    text(p, 0, y + 18, str, { 'text-anchor': 'middle', 'font-size': 16.5, 'font-weight': 600, fill: '#3c3a33', class: 'ptag' });
   };
 
   // ---- leñador: hacha en alto y leña apilada ----
