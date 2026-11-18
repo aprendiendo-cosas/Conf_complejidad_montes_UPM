@@ -1,4 +1,4 @@
-// Escena 6 · Problemas retorcidos (6.1–6.6e)
+// Escena 6 · Problemas retorcidos (6.1–6.10)
 (() => {
   const { $, el, layer, text } = P;
   const g6 = $('#s6');
@@ -15,7 +15,7 @@
   text(wt, 800, 150, 'Los problemas de los socioecosistemas', { 'text-anchor': 'middle', 'font-size': 58, 'font-weight': 700, fill: CREAM });
   text(wt, 800, 222, 'son perversos (wicked)', { 'text-anchor': 'middle', 'font-size': 58, 'font-weight': 700, fill: AMBER });
 
-  // 6.6a–e · características, una por clic, bajo el rótulo y en letra más pequeña
+  // 6.6–6.10 · características, una por clic, bajo el rótulo y en letra más pequeña
   const CAR = [
     ['Son difícilmente formulables porque dependen', 'de intereses de personas y colectivos'],
     ['Cada problema es único'],
@@ -44,10 +44,10 @@
     { id: '6.3', on: ['sesb'] },
     { id: '6.4', off: ['sesb'] },
     { id: '6.5', on: ['wdim', 'wtitle'] },
-    { id: '6.6a', on: ['w1'] },
-    { id: '6.6b', on: ['w2'] },
-    { id: '6.6c', on: ['w3'] },
-    { id: '6.6d', on: ['w4'] },
-    { id: '6.6e', on: ['w5'] },
+    { id: '6.6', on: ['w1'] },
+    { id: '6.7', on: ['w2'] },
+    { id: '6.8', on: ['w3'] },
+    { id: '6.9', on: ['w4'] },
+    { id: '6.10', on: ['w5'] },
   ]);
 })();
