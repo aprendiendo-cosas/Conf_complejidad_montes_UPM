@@ -277,7 +277,8 @@
   text(ast, xEnd - 10, 580, '*matizable', { 'text-anchor': 'middle', 'font-size': 30, 'font-style': 'italic', fill: '#b0662a' });
 
   P.steps([
-    { id: '1.1', off: ['veil', 'foto1', 'foto2', 'lema'], on: ['q1'] },
+    { id: '1.1', off: ['veil', 'foto1', 'foto2', 'lema'] },
+    { id: '1.2', on: ['q1'] },
     { id: '2.1', off: ['q1'], on: ['village'] },
     { id: '2.2', on: ['p_lena'] },
     { id: '2.3', on: ['p_past'] },

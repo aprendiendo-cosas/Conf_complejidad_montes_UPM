@@ -15,9 +15,9 @@
   text(t, 800, 520, 'Francisco Javier Bonet García · Área de Ecología · Universidad de Córdoba',
     { 'text-anchor': 'middle', 'font-size': 30, 'font-weight': 700, fill: '#3f3324' });
   el('line', { x1: 235, x2: 1365, y1: 650, y2: 650, stroke: '#6f604a', 'stroke-width': 2 }, t);
-  // nombre del evento: por concretar en la escaleta; ocupa el ancho del título
-  text(t, 800, 700, 'ETSI de Montes, Forestal y del Medio Natural · Universidad Politécnica de Madrid · 19 de noviembre de 2026',
-    { 'text-anchor': 'middle', 'font-size': 27, 'font-weight': 700, fill: '#3f3324', textLength: 1130, lengthAdjust: 'spacing' });
+  // nombre del centro, sin forzar el ancho (textLength apretaba las letras hasta montarlas)
+  text(t, 800, 700, 'Escuela Técnica Superior de Ingeniería de Montes, Forestal y del Medio Natural',
+    { 'text-anchor': 'middle', 'font-size': 34, 'font-weight': 700, 'letter-spacing': .5, fill: '#3f3324' });
 
   // fotos de las dos sedes, como fotos sobre la mesa
   function photo(flag, href, cx, cy, w, h, rot) {
