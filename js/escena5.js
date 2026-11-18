@@ -1,4 +1,4 @@
-// Escena 5 · Las gafas de la complejidad (5.1–5.43)
+// Escena 5 · Las gafas de la complejidad (5.1–5.61)
 (() => {
   const { $, el, layer, text, smooth, arc, pill } = P;
   const g5 = $('#s5'), defs = $('#defs');
@@ -163,13 +163,83 @@
   const legRow = (flag, i, color, str, isArrow) => {
     const g = layer(g5, flag, 'L', .3), y = 30 + i * 54;
     el('rect', { x: 1190, y, width: 380, height: 50, rx: 12, fill: '#1f1a14', opacity: .85 }, g);
-    if (isArrow) el('path', { d: `M1210,${y + 25} L1262,${y + 25}`, stroke: color, 'stroke-width': 4, 'marker-end': 'url(#arrCtl)' }, g);
+    if (isArrow === 'patch') el('path', { d: smooth([[1212, y + 25], [1236, y + 11], [1264, y + 18], [1260, y + 38], [1230, y + 40]]), fill: color, 'fill-opacity': .6, stroke: color, 'stroke-width': 2 }, g);
+    else if (isArrow) el('path', { d: `M1210,${y + 25} L1262,${y + 25}`, stroke: color, 'stroke-width': 4, 'marker-end': 'url(#arrCtl)' }, g);
     else el('path', { d: smooth([[1212, y + 25], [1236, y + 13], [1262, y + 20], [1258, y + 36], [1230, y + 38]]), fill: 'none', stroke: color, 'stroke-width': 3.5 }, g);
     text(g, 1282, y + 33, str, { 'font-size': 23, 'font-weight': 600, fill: CREAM });
   };
   legRow('leg1', 0, C_FIS, 'Jerarquía física');
   legRow('leg2', 1, C_FUN, 'Jerarquías funcionales');
   legRow('leg3', 2, C_CTL, 'Jerarquías de control', true);
+  legRow('leg4', 3, CREAM, 'Subsistemas', 'patch');
+
+  // ================= Subsistemas y casi descomponibilidad (5.44–5.61) =================
+  // flechas con punta de tamaño fijo en píxeles, para que las finas no se queden sin punta
+  const markerPx = (id, color, px) => {
+    const m = el('marker', { id, viewBox: '0 0 10 10', refX: 7, refY: 5, markerWidth: px, markerHeight: px, markerUnits: 'userSpaceOnUse', orient: 'auto-start-reverse' }, defs);
+    el('path', { d: 'M0,0 L10,5 L0,10 z', fill: color }, m);
+  };
+  markerPx('arrSubA', CREAM, 30); markerPx('arrSubB', CREAM, 20); markerPx('arrSubC', CREAM, 15); markerPx('arrSubD', CREAM, 12);
+  const C_SUELO = '#e07a5f', C_PLANT = '#b5f23d', C_ANIM = '#c77dff', C_ENC = '#4d8dff', C_MAT = '#f15bb5';
+
+  // mancha semitransparente; pts en coordenadas de la imagen de la lupa (isImg) o de la pantalla
+  const patch = (parent, flag, pts, color, isImg = true) => {
+    const d = smooth(isImg ? pts.map(toS) : pts);
+    el('path', { d, fill: color, 'fill-opacity': .38, stroke: color, 'stroke-width': 3, 'stroke-linejoin': 'round', class: 'L', 'data-on': flag }, parent);
+  };
+  // flecha bidireccional (a, b en pantalla)
+  const biArrow = (parent, flag, a, b, bend, w, mk, delay = 0) => {
+    const d = arc(a, b, bend);
+    el('path', { d, fill: 'none', stroke: '#14100b', 'stroke-width': w + 4, opacity: .45, class: 'L', 'data-on': flag }, parent);
+    const p = el('path', { d, fill: 'none', stroke: CREAM, 'stroke-width': w, 'stroke-linecap': 'round', class: 'draw', 'data-on': flag, pathLength: 1,
+      'marker-start': `url(#${mk})`, 'marker-end': `url(#${mk})` }, parent);
+    p.style.setProperty('--d', delay + 's');
+  };
+
+  // dentro de la lupa (debajo de los rótulos): suelo, plantas y animales terrestres
+  const subIn = el('g', {}, inside);
+  patch(subIn, 'm_suelo', [[-150, 1600], [500, 1585], [1000, 1600], [1500, 1585], [2200, 1600], [2200, 1950], [1000, 1980], [-150, 1950]], C_SUELO);
+  patch(subIn, 'm_plant', [[0, 1175], [0, 60], [140, 30], [265, 150], [300, 380], [600, 370], [680, 225], [765, 420], [1000, 445], [1285, 205],
+    [1525, 245], [1645, 330], [1825, 295], [2048, 330], [2048, 1175], [1500, 1245], [1000, 1235], [500, 1175]], C_PLANT);
+  patch(subIn, 'm_anim', [[160, 1190], [500, 1150], [900, 1150], [1000, 1320], [1450, 1320], [1600, 1395], [1880, 1395], [1895, 1570],
+    [1500, 1600], [1000, 1585], [600, 1595], [250, 1595], [140, 1440]], C_ANIM);
+  label(subIn, 'l_suelo', 450, 752, 'Suelo', C_SUELO, 26);
+  label(subIn, 'l_plant', ...toS([620, 430]), 'Plantas', C_PLANT, 26);
+  label(subIn, 'l_anim', ...toS([1180, 1255]), 'Animales terrestres', C_ANIM, 26);
+
+  // fuera de la lupa, sobre el paisaje (recortado a la imagen y debajo de la lupa)
+  // la cumbre: silueta de la montaña principal en fondo_1_bosque.jpg, en coordenadas de pantalla
+  const SKY = [[-40, 356], [119, 338], [232, 322], [344, 294], [457, 266], [658, 258], [745, 285], [833, 291], [996, 351], [1215, 398],
+    [1309, 401], [1434, 438], [1640, 505]];
+  const MAT = SKY.concat([[1640, 695], [1300, 640], [1121, 616], [1255, 595], [1246, 545], [1027, 537], [940, 495], [996, 432], [1027, 376],
+    [810, 392], [780, 344], [833, 300], [733, 298], [714, 370], [557, 420], [370, 430], [213, 336]]);
+  const subOut = el('g', { 'clip-path': 'url(#imgClip)' }, g5);
+  g5.insertBefore(subOut, lupa);
+  patch(subOut, 'm_enc', FOREST, C_ENC, false);
+  el('path', { d: 'M' + MAT.map(p => p.join(',')).join(' L') + ' Z', fill: C_MAT, 'fill-opacity': .38, stroke: C_MAT, 'stroke-width': 3,
+    'stroke-linejoin': 'round', class: 'L', 'data-on': 'm_mat' }, subOut);
+  label(g5, 'l_enc', 985, 590, 'Encinar', C_ENC, 26);
+  label(g5, 'l_mat', 1340, 578, 'Matorral de alta montaña', C_MAT, 26);
+
+  // 5.57 · interacciones fuertes dentro de cada subsistema
+  biArrow(subIn, 'a_sub', [300, 802], [600, 802], .08, 7, 'arrSubA');
+  biArrow(subIn, 'a_sub', toS([380, 820]), toS([1500, 820]), -.12, 7, 'arrSubA', .2);
+  biArrow(subIn, 'a_sub', toS([620, 1480]), toS([1450, 1470]), .1, 7, 'arrSubA', .4);
+  biArrow(g5, 'a_sub', [895, 520], [1000, 440], .25, 7, 'arrSubA', .6);
+  biArrow(g5, 'a_sub', [1170, 440], [1500, 520], -.1, 7, 'arrSubA', .8);
+  // 5.58–5.60 · interacciones débiles entre subsistemas, cada vez más finas
+  const weak = el('g', {}, g5);
+  biArrow(weak, 'a_w1', toS([1720, 780]), [950, 545], .18, 3.2, 'arrSubB');
+  biArrow(weak, 'a_w2', toS([1500, 330]), [1080, 410], -.2, 2, 'arrSubC');
+  biArrow(weak, 'a_w3', toS([1600, 560]), [1420, 318], -.06, 1.2, 'arrSubD');
+
+  // 5.61 · la ley, a la derecha de la lupa
+  const law = layer(g5, 'ley');
+  el('rect', { x: 880, y: 612, width: 700, height: 282, rx: 20, fill: '#1f1a14', opacity: .9, stroke: AMBER, 'stroke-opacity': .5, 'stroke-width': 2 }, law);
+  text(law, 910, 666, 'Casi descomponibilidad', { 'font-size': 40, 'font-weight': 700, fill: AMBER });
+  ['Las interacciones a corto plazo dentro de cada', 'subsistema son fuertes y frecuentes, mientras que',
+    'las interacciones entre distintos subsistemas son', 'débiles pero no nulas, operando a escalas', 'temporales más lentas.'].forEach((l, i) =>
+    text(law, 910, 716 + i * 38, l, { 'font-size': 26, fill: CREAM }));
 
   const DIAG = ['sysdark', 'def', 'defsmall', 'ax1', 'ax2', 'ax3', 'vaso', 'torm', 'coral', 'cone', 'pr1', 'pr2', 'pr3', 'pr4', 'pr5', 'prhi'];
   P.steps([
@@ -216,5 +286,23 @@
     { id: '5.41', on: ['l_retro'] },
     { id: '5.42', off: ['a_down', 'l_down', 'a_up', 'l_up', 'a_comp', 'l_comp', 'l_retro'] },
     { id: '5.43', on: ['leg3'] },
+    { id: '5.44' },
+    { id: '5.45', on: ['m_suelo'] },
+    { id: '5.46', on: ['l_suelo'] },
+    { id: '5.47', on: ['m_plant'] },
+    { id: '5.48', on: ['l_plant'] },
+    { id: '5.49', on: ['m_anim'] },
+    { id: '5.50', on: ['l_anim'] },
+    { id: '5.51', on: ['m_enc'] },
+    { id: '5.52', on: ['l_enc'] },
+    { id: '5.53', on: ['m_mat'] },
+    { id: '5.54', on: ['l_mat'] },
+    { id: '5.55', on: ['leg4'] },
+    { id: '5.56' },
+    { id: '5.57', on: ['a_sub'] },
+    { id: '5.58', on: ['a_w1'] },
+    { id: '5.59', on: ['a_w2'] },
+    { id: '5.60', on: ['a_w3'] },
+    { id: '5.61', on: ['ley'] },
   ]);
 })();
