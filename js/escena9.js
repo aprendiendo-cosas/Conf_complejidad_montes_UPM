@@ -13,7 +13,7 @@
   const r1 = layer(g9, 'reto1');
   ['Trataremos de adivinar qué habrían dicho los tres autores anteriores',
    'ante un reto que abordaron nuestros antecesores:',
-   'las repoblaciones forestales en España de los años 1940s']
+   'las repoblaciones forestales en España de los años cuarenta']
     .forEach((l, k) => text(r1, 800, 240 + k * 48, l, { ...mid, 'font-size': 34, 'font-weight': k === 2 ? 700 : 500, fill: CREAM }));
 
   // 9.4 · debajo
