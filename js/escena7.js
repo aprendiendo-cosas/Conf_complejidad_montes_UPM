@@ -40,7 +40,7 @@
   pill(dG, 430, 716, 'Dehesa', { size: 28 });
 
   // 7.8–7.11 · pregunta y causas, sobre el paisaje velado (mismo estilo que 6.5–6.10)
-  el('rect', { width: 1600, height: 900, fill: '#1b1711', opacity: .8 }, layer(g7, 'qdim'));
+  el('rect', { width: 1600, height: 900, fill: '#1b1711', opacity: .96 }, layer(g7, 'qdim'));
   text(layer(g7, 'qtitle'), 800, 190, '¿Por qué ya no nos sirven tan bien estas técnicas?', { 'text-anchor': 'middle', 'font-size': 56, 'font-weight': 700, fill: AMBER });
   ['El contexto climático está cambiando rápido.', 'El sistema económico se ha globalizado.', 'Estos métodos son difícilmente transferibles.']
     .forEach((s, i) => {
