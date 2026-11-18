@@ -1,4 +1,4 @@
-// Escena 5 · Las gafas de la complejidad (5.1–5.42)
+// Escena 5 · Las gafas de la complejidad (5.1–5.43)
 (() => {
   const { $, el, layer, text, smooth, arc, pill } = P;
   const g5 = $('#s5'), defs = $('#defs');
@@ -76,15 +76,17 @@
     el('path', { d: `M${32 + i * 36},${432 + i * 56} h${s.length * 18} `, stroke: AMBER, 'stroke-width': 2, opacity: .45 }, g);
   });
 
-  // ================= Autoorganización: la lupa (5.19–5.42) =================
+  // ================= Autoorganización: la lupa (5.19–5.43) =================
   // El círculo de la lupa (centro 450,450; r 400) enseña 5_zoom_bosque.jpg (2048×1800) a escala 0,444,
   // centrado en el punto (1024,1000) de la imagen para que entren todos los animales.
   const LC = [450, 450], LR = 400, S = LR / 900, OX = LC[0] - 1024 * S, OY = LC[1] - 1000 * S;
   const toS = ([x, y]) => [OX + x * S, OY + y * S];
 
   // contorno del bosque en el paisaje general (fuera de la lupa): 5.24 y 5.34
+  // los puntos del borde quedan fuera de la imagen y el contorno se recorta justo en su límite (clip 'imgClip')
   const FOREST = [[733, 288], [833, 290], [780, 344], [810, 392], [1027, 376], [996, 432], [940, 495], [1027, 537], [1246, 545],
-    [1255, 595], [1121, 616], [1300, 640], [1594, 690], [1594, 894], [6, 894], [6, 352], [213, 326], [370, 430], [557, 420], [714, 370]];
+    [1255, 595], [1121, 616], [1300, 640], [1640, 695], [1640, 940], [-40, 940], [-40, 347], [213, 326], [370, 430], [557, 420], [714, 370]];
+  el('rect', { width: 1600, height: 900 }, el('clipPath', { id: 'imgClip' }, defs));
 
   const contour = (parent, flag, pts, color, isImg = true, extra = {}) => {
     const d = smooth(isImg ? pts.map(toS) : pts);
@@ -94,7 +96,7 @@
   const label = (parent, flag, x, y, str, color, size = 24) => pill(layer(parent, flag, 'L', .5), x, y, str, { color, size });
 
   // contornos sobre el paisaje (debajo de la lupa)
-  const land = el('g', {}, g5);
+  const land = el('g', { 'clip-path': 'url(#imgClip)' }, g5);
   contour(land, 'c_bosque', FOREST, C_FIS, false);
   label(land, 'l_com', 930, 245, 'Comunidades', C_FIS);
   contour(land, 'c_eco', FOREST, C_FUN, false);
@@ -210,8 +212,9 @@
     { id: '5.37', on: ['leg2'] },
     { id: '5.38', on: ['a_down', 'l_down'] },
     { id: '5.39', on: ['a_up', 'l_up'] },
-    { id: '5.40', on: ['a_comp', 'l_comp', 'l_retro'] },
-    { id: '5.41', off: ['a_down', 'l_down', 'a_up', 'l_up', 'a_comp', 'l_comp', 'l_retro'] },
-    { id: '5.42', on: ['leg3'] },
+    { id: '5.40', on: ['a_comp', 'l_comp'] },
+    { id: '5.41', on: ['l_retro'] },
+    { id: '5.42', off: ['a_down', 'l_down', 'a_up', 'l_up', 'a_comp', 'l_comp', 'l_retro'] },
+    { id: '5.43', on: ['leg3'] },
   ]);
 })();

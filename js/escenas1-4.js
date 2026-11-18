@@ -7,8 +7,7 @@
   const s1 = $('#s1');
   const q = (flag, lines, size, y0) => {
     const g = layer(s1, flag);
-    lines.forEach((l, i) => text(g, 800, y0 + i * size * 1.18, l, { 'text-anchor': 'middle', 'font-size': size, 'font-weight': 650, fill: INK,
-      stroke: '#fbf3e3', 'stroke-width': 6, 'paint-order': 'stroke', 'stroke-linejoin': 'round' }));
+    lines.forEach((l, i) => text(g, 800, y0 + i * size * 1.18, l, { 'text-anchor': 'middle', 'font-size': size, 'font-weight': 650, fill: INK }));
   };
   q('q1', ['¿Qué veis?'], 80, 150);
   q('q2', ['¿Sabemos gestionarlo de forma sostenible?'], 60, 140);
