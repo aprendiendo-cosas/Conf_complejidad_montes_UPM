@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prototipo escenas 1–4</title>
+<title>Retos de restaurar la naturaleza en un mundo complejo</title>
 <style>
-  html, body { margin: 0; height: 100%; background: #1c2a30; overflow: hidden; }
+  html, body { margin: 0; height: 100%; background: #1c1812; overflow: hidden; }
   body { font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif; }
   svg#stage { width: 100vw; height: 100vh; display: block; cursor: pointer; }
   svg text { font-family: inherit; }
@@ -14,7 +14,7 @@
   .L { opacity: 0; transition: opacity 1s ease; pointer-events: none; }
   .L.on { opacity: 1; transition-delay: var(--d, 0s); }
   .Lslow { transition-duration: 2.2s; }
-  .Lvillage { transition-duration: 1.8s; }
+  .Lvillage { transition-duration: 2s; }
 
   .pop { opacity: 0; transform: scale(.2); transform-box: fill-box; transform-origin: 50% 100%;
          transition: opacity .4s ease, transform .7s cubic-bezier(.3,1.6,.5,1); }
@@ -23,10 +23,20 @@
   .draw { stroke-dasharray: 1 1; stroke-dashoffset: 1; opacity: 0;
           transition: stroke-dashoffset 1.1s ease, opacity .3s; }
   .draw.on { stroke-dashoffset: 0; opacity: 1; transition-delay: var(--d, 0s); }
+  .draw path, .draw line { stroke-dasharray: inherit; stroke-dashoffset: inherit; }
+
+  /* foto que entra desde abajo, como sobre una mesa */
+  .photo { opacity: 0; transform: translateY(560px) rotate(calc(var(--r) * -3)); transform-box: fill-box; transform-origin: center;
+           transition: transform 1.1s cubic-bezier(.2,1,.3,1), opacity .5s; }
+  .photo.on { opacity: 1; transform: rotate(var(--r)); }
+
+  /* lupa: sale pequeña del SO del paisaje y crece */
+  .grow { opacity: 0; transform: translate(-70px, 230px) scale(.12); transform-box: view-box; transform-origin: 400px 470px;
+          transition: transform 1.7s cubic-bezier(.5,0,.2,1), opacity .5s; }
+  .grow.on { opacity: 1; transform: none; }
 
   /* ---------- Degradación sobre la imagen ---------- */
-  .burnt   { filter: grayscale(1) brightness(.85) contrast(1.25); }
-  .decline { filter: sepia(1) saturate(2.2) hue-rotate(-12deg) brightness(.95); }
+  .burnt    { filter: grayscale(1) brightness(.85) contrast(1.25); }
 
   @keyframes rise { 0% { transform: translateY(0) scale(.6); opacity: 0; }
                     25% { opacity: .38; }
@@ -42,17 +52,13 @@
   .f-glasses #frame { opacity: 1; transform: none; }
   .f-glasses.f-lensfull #frame { opacity: 0; transform: scale(5); transition: opacity .9s ease, transform 1.5s cubic-bezier(.6,0,.2,1); }
 
-  /* ---------- Red sistémica ---------- */
-  .node circle.core { stroke-width: 5; }
-  @keyframes flow { to { stroke-dashoffset: -0.14; } }
-  .loopflow { stroke-dasharray: .045 .025; animation: flow 2.4s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .spin { transform-box: fill-box; transform-origin: center; animation: spin 6s linear infinite; }
-  @keyframes pulse { 0% { r: 40px; opacity: .9; } 100% { r: 85px; opacity: 0; } }
-  .pulse { animation: pulse 1.8s ease-out infinite; }
-  #syslabel { transition: opacity .5s; }
-  #edges { transition: opacity .8s; }
-  .f-loop #edges { opacity: .25; }
+  /* ---------- Escena 5: qué es un sistema ---------- */
+  #def { transform-box: view-box; transform-origin: 1570px 40px; transition: transform 1s ease; }
+  .f-defsmall #def { transform: scale(.72); }
+  #diagram { transition: opacity .8s ease; }
+  .f-prhi #diagram { opacity: .3; }
+  #pr1 { transform-box: fill-box; transform-origin: 0% 50%; transition: transform .9s cubic-bezier(.3,1.4,.5,1), filter .9s; }
+  .f-prhi #pr1 { transform: scale(1.5); filter: url(#glow); }
 
   /* ---------- HUD ---------- */
   #hud { position: fixed; right: 14px; bottom: 10px; color: #ffffffaa; font-size: 12px;
@@ -62,18 +68,33 @@
 </head>
 <body>
 <svg id="stage" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-  <defs>
+  <defs id="defs">
     <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="18"/></filter>
     <filter id="soft2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="8"/></filter>
-    <mask id="mFire"    maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="900"><path id="zFire" fill="#fff" filter="url(#soft)"/></mask>
-    <mask id="mDecline" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="900"><path id="zDecline" fill="#fff" filter="url(#soft)"/></mask>
+    <filter id="soft3" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3"/></filter>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity=".45"/></filter>
+    <filter id="glow" x="-30%" y="-60%" width="160%" height="220%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="7" result="b"/>
+      <feFlood flood-color="#ffd27a" flood-opacity=".9"/><feComposite in2="b" operator="in" result="g"/>
+      <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <!-- decaimiento: solo cambia de color lo que es verde (las copas), no el suelo -->
+    <filter id="fRust" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feColorMatrix in="SourceGraphic" type="matrix" values=".95 .65 .1 0 .06  .35 .3 .05 0 0  .1 .1 .05 0 0  0 0 0 1 0" result="rust"/>
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -8 10 -2 0 .2" result="green"/>
+      <feComposite in="rust" in2="green" operator="in" result="r2"/>
+      <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="r2"/></feMerge>
+    </filter>
+    <filter id="fDead" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feColorMatrix in="SourceGraphic" type="matrix" values=".45 .55 .2 0 .12  .45 .55 .2 0 .1  .45 .55 .2 0 .08  0 0 0 1 0" result="grey"/>
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -8 10 -2 0 .2" result="green"/>
+      <feComposite in="grey" in2="green" operator="in" result="g2"/>
+      <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="g2"/></feMerge>
+    </filter>
+    <mask id="mFire"   maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="900"><path id="zFire" fill="#fff" filter="url(#soft)"/></mask>
+    <mask id="mDecline" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="900"><g id="zDecline" fill="#fff" filter="url(#soft)"></g></mask>
+    <mask id="mDead"    maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="900"><g id="zDead" fill="#fff" filter="url(#soft3)"></g></mask>
     <mask id="mErosion" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="900"><path id="zErosion" fill="#fff" filter="url(#soft2)"/></mask>
-    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#e9eef2"/>
-    </marker>
-    <marker id="arrowA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#f4c55c"/>
-    </marker>
     <mask id="lensMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="900">
       <rect width="1600" height="900" fill="#000"/>
       <circle class="lens" cx="620" cy="430" fill="#fff"/>
@@ -84,23 +105,18 @@
   <!-- ===== PAISAJE: fondo ilustrado + capas encima ===== -->
   <g id="landscape">
     <image href="imagenes/fondo_1_bosque.jpg" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>
-
-    <!-- pueblo: recorte de 2_bosque_pueblo.jpg (solo la zona que cambia, con borde difuminado).
-         Posición = recorte en px del original (x 1696, y 912, 1056×624) × escala 900/1536, desplazado -6.25 en x por el encuadre -->
+    <!-- pueblo: recorte de 2_bosque_pueblo.jpg (x 1696, y 912, 1056×624 px del original) × 900/1536, desplazado -6.25 en x -->
     <g class="L Lvillage" data-on="village">
       <image href="imagenes/capa_2_pueblo.png" x="987.5" y="534.375" width="618.75" height="365.625"/>
     </g>
-
-    <!-- erosión: suelo desnudo y cárcavas en la ladera abierta de la derecha -->
     <g class="L Lslow" data-on="erosion">
-      <rect width="1600" height="900" fill="#c98a52" mask="url(#mErosion)" style="mix-blend-mode:multiply" opacity=".55"/>
-      <g id="gullies"></g>
+      <rect width="1600" height="900" fill="#c98a52" mask="url(#mErosion)" style="mix-blend-mode:multiply" opacity=".7"/>
+      <g id="gullies" mask="url(#mErosion)"></g>
     </g>
-    <!-- decaimiento: copas pardas en el bosque de la izquierda -->
-    <g class="L Lslow" data-on="decline" mask="url(#mDecline)">
-      <image class="decline" href="imagenes/fondo_1_bosque.jpg" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>
+    <g class="L Lslow" data-on="decline">
+      <g mask="url(#mDecline)"><image filter="url(#fRust)" href="imagenes/fondo_1_bosque.jpg" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/></g>
+      <g mask="url(#mDead)"><image filter="url(#fDead)" href="imagenes/fondo_1_bosque.jpg" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/></g>
     </g>
-    <!-- incendio: el bosque central calcinado -->
     <g class="L Lslow" data-on="fire" mask="url(#mFire)">
       <image class="burnt" href="imagenes/fondo_1_bosque.jpg" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>
     </g>
@@ -109,41 +125,17 @@
     <g id="humans"></g>
   </g>
 
-  <!-- velo para la hipótesis -->
-  <g class="L" data-on="dim"><rect width="1600" height="900" fill="#f6efe2" opacity=".66"/></g>
+  <!-- escenas 0–4: velos, textos y fotos sobre el paisaje -->
+  <g id="s0"></g>
+  <g id="s1"></g>
+  <g id="s4"></g>
 
-  <!-- ===== TEXTOS DEL HILO ===== -->
-  <g class="L" data-on="title">
-    <rect x="50" y="60" width="980" height="215" rx="18" fill="#fbf6ec" opacity=".8"/>
-    <text x="85" y="140" font-size="58" font-weight="600" fill="#3a2e1f">Retos de restaurar la naturaleza</text>
-    <text x="85" y="205" font-size="58" font-weight="600" fill="#3a2e1f">en un mundo complejo</text>
-    <text x="87" y="252" font-size="23" fill="#5d5040">F. J. Bonet · ETSI de Montes, Forestal y del Medio Natural (UPM) · 19-11-2026</text>
-  </g>
-  <g class="L" data-on="q1"><text x="800" y="150" text-anchor="middle" font-size="76" font-weight="600" fill="#3a2e1f">¿Qué veis?</text></g>
-  <g class="L" data-on="q2"><text x="800" y="150" text-anchor="middle" font-size="60" font-weight="600" fill="#3a2e1f">¿Sabemos gestionarlo de forma sostenible?</text></g>
-  <g class="L" data-on="q3"><text x="800" y="140" text-anchor="middle" font-size="60" font-weight="600" fill="#3a2e1f">¿Por qué ocurre esto tan a menudo?</text></g>
-  <g class="L" data-on="hyp">
-    <text x="800" y="400" text-anchor="middle" font-size="56" fill="#4d4232">No nos falta ciencia ni técnica.</text>
-    <text x="800" y="490" text-anchor="middle" font-size="64" font-weight="700" fill="#3a2e1f">Nos falta la mirada compleja.</text>
-  </g>
-
-  <!-- ===== CAPA SISTÉMICA (solo visible a través de las gafas) ===== -->
+  <!-- ===== MIRADA DE LAS GAFAS (solo visible a través de las lentes) ===== -->
   <g id="systemic" mask="url(#lensMask)">
     <use href="#landscape"/>
-    <rect width="1600" height="900" fill="#13263a" opacity=".7"/>
-    <g id="past" class="L" data-on="past"></g>
-    <g id="hier"></g>
-    <g id="edges"></g>
-    <g id="loop" class="L" data-on="loop"></g>
-    <g id="nodes"></g>
-    <g class="L" data-on="ses">
-      <text x="70" y="120" font-size="66" font-weight="700" fill="#f4c55c">Socioecosistema</text>
-      <text x="72" y="170" font-size="28" fill="#e9eef2">El reto no es gestionar un bosque, sino un socioecosistema</text>
-    </g>
-    <text id="syslabel" x="70" y="120" font-size="44" font-weight="600" fill="#e9eef2" opacity="0"></text>
+    <rect width="1600" height="900" fill="#2b4a63" opacity=".3" style="mix-blend-mode:multiply"/>
+    <rect width="1600" height="900" fill="#fff4dc" opacity=".06"/>
   </g>
-
-  <!-- montura de las gafas -->
   <g id="frame" fill="none" stroke="#24292b" stroke-linecap="round">
     <circle cx="620" cy="430" r="168" stroke-width="18"/>
     <circle cx="980" cy="430" r="168" stroke-width="18"/>
@@ -151,272 +143,15 @@
     <path d="M455,405 L330,360" stroke-width="14"/>
     <path d="M1145,405 L1270,360" stroke-width="14"/>
   </g>
+
+  <g id="s5"></g>
 </svg>
 <div id="hud"></div>
 
-<script>
-(() => {
-const NS = 'http://www.w3.org/2000/svg';
-const $ = s => document.querySelector(s);
-const svg = $('#stage');
-
-function el(tag, attrs = {}, parent) {
-  const e = document.createElementNS(NS, tag);
-  for (const k in attrs) e.setAttribute(k, attrs[k]);
-  if (parent) parent.appendChild(e);
-  return e;
-}
-// generador pseudoaleatorio con semilla: todo sale igual cada vez
-let seed = 7;
-const rnd = () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
-  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
-
-// mancha irregular y suave (para las zonas de degradación)
-function blob(cx, cy, rx, ry, jit = .22, n = 11) {
-  const p = [];
-  for (let i = 0; i < n; i++) {
-    const a = i / n * Math.PI * 2, k = 1 + (rnd() - .5) * 2 * jit;
-    p.push([cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k]);
-  }
-  let d = '';
-  for (let i = 0; i < n; i++) {
-    const [x1, y1] = p[i], [x2, y2] = p[(i + 1) % n];
-    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
-    d += (i ? ' Q' : `M${((p[n - 1][0] + x1) / 2).toFixed(1)},${((p[n - 1][1] + y1) / 2).toFixed(1)} Q`) + `${x1.toFixed(1)},${y1.toFixed(1)} ${mx.toFixed(1)},${my.toFixed(1)}`;
-  }
-  return d + ' Z';
-}
-
-// ---------- Zonas de degradación (coordenadas sobre el fondo) ----------
-const Z = {
-  fire:    { cx: 840, cy: 520, rx: 150, ry: 115, label: 'incendio',    lx: 840,  ly: 372 },
-  decline: { cx: 250, cy: 540, rx: 170, ry: 105, label: 'decaimiento', lx: 250,  ly: 680 },
-  erosion: { cx: 1350, cy: 505, rx: 140, ry: 65, label: 'erosión',     lx: 1350, ly: 405 },
-};
-$('#zFire').setAttribute('d', blob(Z.fire.cx, Z.fire.cy, Z.fire.rx, Z.fire.ry));
-$('#zDecline').setAttribute('d', blob(Z.decline.cx, Z.decline.cy, Z.decline.rx, Z.decline.ry));
-$('#zErosion').setAttribute('d', blob(Z.erosion.cx, Z.erosion.cy, Z.erosion.rx, Z.erosion.ry, .3));
-
-(() => {
-  // cárcavas: surcos que bajan por la ladera abierta
-  const g = $('#gullies');
-  for (let i = 0; i < 8; i++) {
-    let x = Z.erosion.cx - 115 + i * 30 + rnd() * 12, y = Z.erosion.cy - 45 + rnd() * 20;
-    let p = `M${x.toFixed(1)},${y.toFixed(1)}`;
-    const steps = 3 + Math.floor(rnd() * 2);
-    for (let k = 0; k < steps; k++) { x += -6 + (rnd() - .5) * 14; y += 22; p += ` L${x.toFixed(1)},${y.toFixed(1)}`; }
-    const w = 3 + rnd() * 3;
-    el('path', { d: p, stroke: '#f0c99a', 'stroke-width': w + 3, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: .5 }, g);
-    el('path', { d: p, stroke: '#6e4426', 'stroke-width': w, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g);
-  }
-  // humo del incendio
-  const sm = $('#smoke');
-  for (let i = 0; i < 10; i++) {
-    const c = el('circle', { cx: Z.fire.cx - 90 + rnd() * 180, cy: Z.fire.cy - 90 + rnd() * 60, r: 14 + rnd() * 12, fill: '#8d8780' }, sm);
-    c.style.animationDelay = (-rnd() * 5.5).toFixed(2) + 's';
-  }
-  // etiquetas de los modos de fallo
-  for (const [flag, z] of Object.entries(Z)) {
-    const gg = el('g', { class: 'L', 'data-on': flag, style: '--d:1.2s' }, $('#degLabels'));
-    const t = z.label;
-    el('rect', { x: z.lx - t.length * 8.5 - 14, y: z.ly - 26, width: t.length * 17 + 28, height: 38, rx: 19, fill: '#2b2522', opacity: .85 }, gg);
-    el('text', { x: z.lx, y: z.ly + 1, 'text-anchor': 'middle', 'font-size': 24, fill: '#f6e8d6' }, gg).textContent = t;
-  }
-})();
-
-// ---------- Personas y actividades ----------
-(() => {
-  const g = $('#humans');
-  const SKIN = '#e5c19c', INK = '#33302c';
-  function person(parent, color, kind) {
-    const p = el('g', {}, parent);
-    const legs = kind === 'run' ? 'M-10,0 L0,-17 L11,-5' : 'M-5,0 L0,-17 L5,0';
-    el('path', { d: legs, stroke: INK, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }, p);
-    el('rect', { x: -7, y: -36, width: 14, height: 21, rx: 5, fill: color, transform: kind === 'run' ? 'rotate(12,0,-20)' : '' }, p);
-    el('circle', { cx: kind === 'run' ? 4 : 0, cy: -43, r: 7, fill: SKIN }, p);
-    if (kind === 'axe') { el('path', { d: 'M8,-28 L20,-50', stroke: '#6b4b2b', 'stroke-width': 3 }, p);
-      el('path', { d: 'M17,-52 L26,-48 L22,-42 Z', fill: '#8c949a' }, p); }
-    if (kind === 'staff') el('path', { d: 'M11,0 L12,-54 Q16,-60 20,-55', stroke: '#6b4b2b', 'stroke-width': 3, fill: 'none' }, p);
-    if (kind === 'rifle') el('path', { d: 'M4,-30 L30,-44', stroke: '#2e2e2e', 'stroke-width': 3.5 }, p);
-    if (kind === 'basket') { el('ellipse', { cx: 12, cy: -18, rx: 8, ry: 6, fill: '#a77b48' }, p);
-      el('path', { d: 'M5,-20 Q12,-32 19,-20', stroke: '#a77b48', 'stroke-width': 2, fill: 'none' }, p); }
-    // sombra en el suelo
-    p.insertBefore(el('ellipse', { cx: 0, cy: 1, rx: 12, ry: 3, fill: '#3a2a18', opacity: .35 }), p.firstChild);
-    return p;
-  }
-  function sheep(parent, x, y) {
-    const s = el('g', { transform: `translate(${x},${y})` }, parent);
-    el('ellipse', { cx: 0, cy: 1, rx: 13, ry: 3, fill: '#3a2a18', opacity: .3 }, s);
-    el('path', { d: 'M-6,0 L-6,-7 M6,0 L6,-7', stroke: INK, 'stroke-width': 2.5 }, s);
-    el('ellipse', { cx: 0, cy: -11, rx: 12, ry: 8, fill: '#f4f1ea', stroke: '#9a9486' }, s);
-    el('circle', { cx: 12, cy: -15, r: 4.5, fill: '#3a3632' }, s);
-  }
-  function tag(parent, text, y = 22) {
-    const w = text.length * 11 + 20;
-    el('rect', { x: -w / 2, y: y - 4, width: w, height: 26, rx: 13, fill: '#fffaf0', opacity: .9 }, parent);
-    el('text', { x: 0, y: y + 15, 'text-anchor': 'middle', 'font-size': 17, fill: '#3c3a33' }, parent).textContent = text;
-  }
-  // escala menor cuanto más arriba (más lejos) en la ladera
-  const acts = [
-    { x: 1185, y: 520, s: 1.2, label: 'madera', draw: p => { person(p, '#c45a3c', 'axe');
-        [[-22,-4],[-30,-4],[-26,-11]].forEach(([cx,cy]) => el('circle', { cx, cy, r: 4.5, fill: '#9a6b42', stroke: '#6b4b2b' }, p)); } },
-    { x: 300, y: 380, s: 1.0, label: 'pastoreo', draw: p => { person(p, '#6d7f9a', 'staff');
-        [[40,2],[70,-6],[95,6],[60,14],[125,0],[150,10],[30,20]].forEach(([sx,sy]) => sheep(p, sx, sy)); } },
-    { x: 205, y: 790, s: 1.6, label: 'caza', draw: p => { person(p, '#5d6b3a', 'rifle');
-        el('ellipse', { cx: -24, cy: -9, rx: 11, ry: 5, fill: '#8a5a33' }, p);
-        el('circle', { cx: -34, cy: -13, r: 4, fill: '#8a5a33' }, p); } },
-    { x: 700, y: 815, s: 1.5, label: 'setas', draw: p => person(p, '#a0628f', 'basket') },
-    { x: 1085, y: 400, s: 1.0, label: 'ocio', draw: p => person(p, '#2f8fb0', 'run') },
-  ];
-  acts.forEach((a, i) => {
-    const outer = el('g', { transform: `translate(${a.x},${a.y}) scale(${a.s})` }, g);
-    const inner = el('g', { class: 'pop', 'data-on': 'humans', style: `--d:${(0.35 + i * 0.45).toFixed(2)}s` }, outer);
-    a.draw(inner);
-    tag(inner, a.label);
-  });
-})();
-
-// ---------- Red sistémica ----------
-const NODES = {
-  clima:    { label: 'Clima',    x: 1300, y: 150, c: '#6fb3e0' },
-  arboles:  { label: 'Árboles',  x: 560,  y: 570, c: '#7cc47f' },
-  fauna:    { label: 'Fauna',    x: 230,  y: 540, c: '#7cc47f' },
-  suelo:    { label: 'Suelo',    x: 330,  y: 760, c: '#c9a46a' },
-  agua:     { label: 'Agua',     x: 1130, y: 780, c: '#6fb3e0' },
-  fuego:    { label: 'Fuego',    x: 870,  y: 430, c: '#e46b4f' },
-  ganado:   { label: 'Ganado',   x: 470,  y: 330, c: '#f2a65a' },
-  personas: { label: 'Personas', x: 1390, y: 590, c: '#f2a65a' },
-};
-const EDGES = [
-  ['clima','arboles'],['clima','agua'],['clima','fuego'],['arboles','suelo'],['suelo','agua'],['agua','arboles'],
-  ['arboles','fuego'],['fuego','suelo'],['ganado','arboles'],['personas','ganado'],['personas','arboles'],
-  ['personas','fuego'],['fauna','arboles'],['agua','personas'],
-];
-const LOOP = [['arboles','suelo'],['suelo','agua'],['agua','arboles']];
-const R = 38;
-
-function curve(a, b, bend = .18, shrink = R + 8) {
-  const A = NODES[a], B = NODES[b];
-  const dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy);
-  const ux = dx / L, uy = dy / L;
-  const x1 = A.x + ux * shrink, y1 = A.y + uy * shrink, x2 = B.x - ux * shrink, y2 = B.y - uy * shrink;
-  const cx = (x1 + x2) / 2 - uy * L * bend, cy = (y1 + y2) / 2 + ux * L * bend;
-  return `M${x1.toFixed(1)},${y1.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`;
-}
-
-(() => {
-  const ge = $('#edges');
-  EDGES.forEach(([a, b], i) => el('path', { class: 'draw', 'data-on': 'rel', pathLength: 1, d: curve(a, b),
-    fill: 'none', stroke: '#e9eef2', 'stroke-width': 3, opacity: .85, 'marker-end': 'url(#arrow)', style: `--d:${(i * 0.09).toFixed(2)}s` }, ge));
-
-  const gl = $('#loop');
-  LOOP.forEach(([a, b]) => {
-    el('path', { d: curve(a, b, .12), fill: 'none', stroke: '#f4c55c', 'stroke-width': 10, opacity: .25 }, gl);
-    el('path', { class: 'loopflow', pathLength: 1, d: curve(a, b, .12), fill: 'none', stroke: '#f4c55c', 'stroke-width': 7, 'marker-end': 'url(#arrowA)' }, gl);
-  });
-  const cx = (NODES.arboles.x + NODES.suelo.x + NODES.agua.x) / 3, cy = (NODES.arboles.y + NODES.suelo.y + NODES.agua.y) / 3;
-  const sp = el('g', { transform: `translate(${cx},${cy})` }, gl);
-  el('path', { class: 'spin', d: 'M0,-34 A34,34 0 1 1 -29,-17', fill: 'none', stroke: '#f4c55c', 'stroke-width': 6, 'marker-end': 'url(#arrowA)' }, sp);
-  el('text', { y: 70, 'text-anchor': 'middle', 'font-size': 24, fill: '#f4c55c' }, sp).textContent = 'autorregulación';
-
-  const gn = $('#nodes');
-  Object.entries(NODES).forEach(([k, n], i) => {
-    const outer = el('g', { transform: `translate(${n.x},${n.y})` }, gn);
-    const g = el('g', { class: 'pop node', 'data-on': 'nodes', style: `--d:${(0.15 + i * 0.12).toFixed(2)}s; transform-origin:50% 50%` }, outer);
-    if (k === 'personas' || k === 'ganado') {
-      const pg = el('g', { class: 'L', 'data-on': 'ses' }, g);
-      el('circle', { class: 'pulse', r: 40, fill: 'none', stroke: '#f2a65a', 'stroke-width': 4 }, pg);
-    }
-    el('circle', { class: 'core', r: R, fill: '#13263a', stroke: n.c }, g);
-    el('circle', { r: 11, fill: n.c }, g);
-    el('text', { y: R + 30, 'text-anchor': 'middle', 'font-size': 24, 'font-weight': 600, fill: '#e9eef2' }, g).textContent = n.label;
-  });
-
-  // jerarquía de escalas, anidadas alrededor de un árbol
-  const gh = $('#hier');
-  const lv = [
-    ['árbol', 560, 570, 46, 46], ['rodal', 600, 590, 160, 110], ['monte', 760, 560, 420, 250],
-    ['cuenca', 800, 540, 740, 340], ['clima regional', 800, 450, 795, 445],
-  ];
-  lv.forEach(([t, x, y, rx, ry], i) => {
-    const gg = el('g', { class: 'L', 'data-on': 'hier', style: `--d:${(i * 0.55).toFixed(2)}s` }, gh);
-    el('ellipse', { cx: x, cy: y, rx, ry, fill: 'none', stroke: '#9fd3ff', 'stroke-width': 3, 'stroke-dasharray': '10 8', opacity: .9 }, gg);
-    el('text', { x: i === 0 ? x + rx + 8 : x, y: i === 0 ? y + 8 : y - ry + 34, 'text-anchor': i === 0 ? 'start' : 'middle',
-      'font-size': 24, 'font-weight': 600, fill: '#9fd3ff' }, gg).textContent = t;
-  });
-
-  // el pasado: bancales en la ladera alta y carboneras en el bosque
-  const gp = $('#past');
-  for (let k = 0; k < 5; k++) {
-    let d = '';
-    for (let x = 380; x <= 1150; x += 15) {
-      const y = 300 + k * 28 + 0.00012 * (x - 760) ** 2 + 4 * Math.sin(x / 40 + k);
-      d += (d ? ' L' : 'M') + `${x},${y.toFixed(1)}`;
-    }
-    el('path', { d, fill: 'none', stroke: '#f4c55c', 'stroke-width': 3, 'stroke-dasharray': '6 7', opacity: .9 }, gp);
-  }
-  [[700, 600], [820, 660], [960, 560], [1060, 690], [460, 640]].forEach(([x, y]) =>
-    el('circle', { cx: x, cy: y, r: 22, fill: 'none', stroke: '#f4c55c', 'stroke-width': 3, 'stroke-dasharray': '5 6' }, gp));
-  el('text', { x: 760, y: 280, 'text-anchor': 'middle', 'font-size': 24, fill: '#f4c55c' }, gp).textContent = 'bancales (h. 1900)';
-  el('text', { x: 880, y: 740, 'text-anchor': 'middle', 'font-size': 24, fill: '#f4c55c' }, gp).textContent = 'carboneras';
-})();
-
-// ---------- Guion de pasos ----------
-// on / off: capas que se encienden o apagan; sys: rótulo dentro de la mirada sistémica
-const STEPS = [
-  { name: 'Portada', on: ['title'] },
-  { name: '1 · ¿Qué veis?', off: ['title'], on: ['q1'] },
-  { name: '1 · ¿Sabemos gestionarlo?', off: ['q1'], on: ['q2'] },
-  { name: '2 · El pueblo', off: ['q2'], on: ['village'] },
-  { name: '2 · Hay humanos', on: ['humans'] },
-  { name: '3 · Incendio', on: ['fire'] },
-  { name: '3 · Erosión', on: ['erosion'] },
-  { name: '3 · Decaimiento', on: ['decline'] },
-  { name: '3 · ¿Por qué?', on: ['q3'] },
-  { name: '4 · Hipótesis', off: ['fire', 'erosion', 'decline', 'q3'], on: ['dim', 'hyp'] },
-  { name: '4 · Las gafas', off: ['hyp'], on: ['glasses', 'nodes', 'rel'] },
-  { name: '4 · Elementos', off: ['rel'], on: ['lensfull'], sys: 'Elementos' },
-  { name: '4 · Relaciones', on: ['rel'], sys: 'Relaciones' },
-  { name: '4 · Autorregulación', on: ['loop'], sys: 'Autorregulación' },
-  { name: '4 · Jerarquía', off: ['loop', 'rel'], on: ['hier'], sys: 'Escalas anidadas' },
-  { name: '4 · El pasado pesa', off: ['hier'], on: ['past'], sys: 'El pasado pesa' },
-  { name: '4 · Socioecosistema', off: ['past'], on: ['rel', 'ses'] },
-];
-
-const layered = [...document.querySelectorAll('[data-on]')];
-const hud = $('#hud'), sysLabel = $('#syslabel');
-let cur = 0;
-
-function flagsAt(i) {
-  const s = new Set();
-  for (let k = 0; k <= i; k++) { (STEPS[k].off || []).forEach(x => s.delete(x)); (STEPS[k].on || []).forEach(x => s.add(x)); }
-  return s;
-}
-function render() {
-  const fl = flagsAt(cur);
-  svg.setAttribute('class', [...fl].map(x => 'f-' + x).join(' '));
-  layered.forEach(e => e.classList.toggle('on', fl.has(e.dataset.on)));
-  const t = STEPS[cur].sys || '';
-  sysLabel.setAttribute('opacity', 0);
-  clearTimeout(render.timer);
-  render.timer = setTimeout(() => { sysLabel.textContent = t; sysLabel.setAttribute('opacity', t ? 1 : 0); }, t ? 350 : 0);
-  hud.textContent = `${cur + 1}/${STEPS.length} · ${STEPS[cur].name}   (← → · h oculta)`;
-  history.replaceState(null, '', '#' + cur);
-}
-function go(d) { cur = Math.max(0, Math.min(STEPS.length - 1, cur + d)); render(); }
-
-document.addEventListener('keydown', e => {
-  if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); go(1); }
-  else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); go(-1); }
-  else if (e.key === 'Home') { cur = 0; render(); }
-  else if (e.key === 'End') { cur = STEPS.length - 1; render(); }
-  else if (e.key === 'h') hud.classList.toggle('hidden');
-});
-svg.addEventListener('click', () => go(1));
-
-cur = Math.max(0, Math.min(STEPS.length - 1, parseInt(location.hash.slice(1)) || 0));
-render();
-})();
-</script>
+<script src="js/motor.js"></script>
+<script src="js/escena0.js"></script>
+<script src="js/escenas1-4.js"></script>
+<script src="js/escena5.js"></script>
+<script>P.start();</script>
 </body>
 </html>

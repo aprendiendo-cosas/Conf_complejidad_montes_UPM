@@ -9,10 +9,12 @@ Las instrucciones generales y el flujo de trabajo están en `../AGENTS.md`. Este
 - El repo es un fork de otra charla. Está pendiente de decidir si sigue siéndolo; lo decide el ponente.
 
 ## Contenido
-- `index.html`: la presentación. Es un único archivo con HTML, SVG y JavaScript propio, sin librerías externas, y funciona sin conexión.
+- `index.html`: la presentación (HTML, SVG y JavaScript propio, sin librerías externas; funciona sin conexión).
   - Se avanza con →, la barra espaciadora, un clic o el mando; se retrocede con ←. La tecla `h` oculta el contador de pasos.
-  - El guion de pasos está en el array `STEPS` del script. Cada paso enciende o apaga capas, que se marcan en el SVG con el atributo `data-on`.
-  - Estado actual: prototipo de las escenas 1–4.
+  - El contador muestra el número de paso de la escaleta (p. ej. `5.19`), y se puede saltar a un paso con `index.html#5.19`.
+- `js/motor.js`: motor común. Cada paso enciende o apaga banderas; los elementos del SVG con `data-on="bandera"` se ven mientras la bandera está encendida.
+- `js/escena0.js`, `js/escenas1-4.js`, `js/escena5.js`: una por escena (o bloque). Cada una dibuja su material y registra sus pasos con `P.steps()`, numerados como en la escaleta.
+  - Estado actual: escenas 0–5 programadas, hasta el paso 5.42.
 - `Conf_ingenieria_regenerativa_sistemas_complejos.md`: **se conserva, no borrar.** Servirá para documentar el proceso y alojar la transcripción de la conferencia. El repo tendrá más material público aparte de la presentación. Su contenido actual procede de otra charla y el ponente lo irá sustituyendo.
 - `imagenes/portada.png`: **se conserva** hasta que el ponente la sustituya por la portada nueva.
 
