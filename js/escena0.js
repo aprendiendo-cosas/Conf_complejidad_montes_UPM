@@ -7,16 +7,18 @@
   // velo sobre el bosque
   el('rect', { width: 1600, height: 900, fill: '#f6efe2', opacity: .58 }, layer(g, 'veil'));
 
-  // título, autor y evento, centrados
+  // título, autor y evento, centrados; en la portada el velo es más opaco para que se lean bien
   const t = layer(g, 'title');
-  text(t, 800, 360, 'Retos de restaurar la naturaleza', { 'text-anchor': 'middle', 'font-size': 72, 'font-weight': 700, fill: INK });
-  text(t, 800, 445, 'en un mundo complejo', { 'text-anchor': 'middle', 'font-size': 72, 'font-weight': 700, fill: INK });
-  text(t, 800, 505, 'Francisco Javier Bonet García · Área de Ecología · Universidad de Córdoba',
-    { 'text-anchor': 'middle', 'font-size': 26, fill: '#5d5040' });
-  el('line', { x1: 290, x2: 1310, y1: 650, y2: 650, stroke: '#8a7a62', 'stroke-width': 1.5 }, t);
+  el('rect', { width: 1600, height: 900, fill: '#f6efe2', opacity: .62 }, t);
+  const halo = { stroke: '#fbf6ec', 'stroke-width': 8, 'paint-order': 'stroke', 'stroke-linejoin': 'round' };
+  text(t, 800, 355, 'Retos de restaurar la naturaleza', Object.assign({ 'text-anchor': 'middle', 'font-size': 84, 'font-weight': 700, fill: '#2e2416' }, halo));
+  text(t, 800, 450, 'en un mundo complejo', Object.assign({ 'text-anchor': 'middle', 'font-size': 84, 'font-weight': 700, fill: '#2e2416' }, halo));
+  text(t, 800, 520, 'Francisco Javier Bonet García · Área de Ecología · Universidad de Córdoba',
+    Object.assign({ 'text-anchor': 'middle', 'font-size': 30, 'font-weight': 500, fill: '#3f3324' }, halo));
+  el('line', { x1: 235, x2: 1365, y1: 650, y2: 650, stroke: '#6f604a', 'stroke-width': 2 }, t);
   // nombre del evento: por concretar en la escaleta; ocupa el ancho del título
   text(t, 800, 700, 'ETSI de Montes, Forestal y del Medio Natural · Universidad Politécnica de Madrid · 19 de noviembre de 2026',
-    { 'text-anchor': 'middle', 'font-size': 24, fill: '#5d5040', textLength: 1020, lengthAdjust: 'spacing' });
+    Object.assign({ 'text-anchor': 'middle', 'font-size': 27, 'font-weight': 500, fill: '#3f3324', textLength: 1130, lengthAdjust: 'spacing' }, halo));
 
   // fotos de las dos sedes, como fotos sobre la mesa
   function photo(flag, href, cx, cy, w, h, rot) {

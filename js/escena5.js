@@ -25,10 +25,11 @@
 
   // ejes desde el origen
   const O = [860, 560];
-  const axis = (flag, to, labels, lx, ly, anchor) => {
+  const axis = (flag, to, labels, lx, ly, anchor, delay = 0) => {
     const g = el('g', {}, diagram);
-    el('path', { class: 'draw', 'data-on': flag, pathLength: 1, d: `M${O} L${to}`, stroke: CREAM, 'stroke-width': 4, fill: 'none', 'marker-end': 'url(#arrCream)' }, g);
-    const t = layer(g, flag, 'L', .8);
+    const p = el('path', { class: 'draw', 'data-on': flag, pathLength: 1, d: `M${O} L${to}`, stroke: CREAM, 'stroke-width': 4, fill: 'none', 'marker-end': 'url(#arrCream)' }, g);
+    p.style.setProperty('--d', delay + 's');
+    const t = layer(g, flag, 'L', .8 + delay);
     labels.forEach((s, i) => text(t, lx, ly + i * 32, s, { 'text-anchor': anchor, 'font-size': 26, 'font-weight': 600, fill: CREAM }));
   };
 
@@ -45,7 +46,8 @@
     el('ellipse', { cx: Cc[0], cy: Cc[1], rx: w, ry: th, transform: `rotate(${ang},${Cc[0]},${Cc[1]})`, fill: '#f5c56a', opacity: .28, stroke: '#f8d68c', 'stroke-width': 3 }, cone);
   })();
 
-  axis('ax1', [1500, 560], ['Diversidad de elementos'], 1500, 604, 'end');
+  // el primer eje espera a que se haya ido la definición (5.4)
+  axis('ax1', [1500, 560], ['Diversidad de elementos'], 1500, 604, 'end', .9);
   axis('ax2', [545, 845], ['Diversidad de conexiones'], 580, 862, 'start');
   axis('ax3', [860, 150], ['Diversidad de información', 'transmitida por las conexiones'], 884, 188, 'start');
 
@@ -59,7 +61,7 @@
     el('image', { href, x: cx - 512 * s, y: cy - 512 * s, width: 1024 * s, height: 1024 * s, 'clip-path': `url(#${id})` }, g);
     el('circle', { cx, cy, r: R, fill: 'none', stroke: AMBER, 'stroke-width': 4 }, g);
   };
-  disc('vaso', 'imagenes/vaso_agua.png', 1060, 460, 62);
+  disc('vaso', 'imagenes/vaso_agua.png', O[0], O[1], 62);   // en el origen de los tres ejes
   disc('torm', 'imagenes/tormenta.jpg', 700, 380, 82);
   disc('coral', 'imagenes/coral.jpg', 370, 230, 118);
 
@@ -75,9 +77,9 @@
   });
 
   // ================= Autoorganización: la lupa (5.19–5.42) =================
-  // El círculo de la lupa (centro 400,470; r 330) enseña 5_zoom_bosque.jpg (2048×1800) a escala 0,3667,
+  // El círculo de la lupa (centro 450,450; r 400) enseña 5_zoom_bosque.jpg (2048×1800) a escala 0,444,
   // centrado en el punto (1024,1000) de la imagen para que entren todos los animales.
-  const S = .3667, OX = 400 - 1024 * S, OY = 470 - 1000 * S, LC = [400, 470], LR = 330;
+  const LC = [450, 450], LR = 400, S = LR / 900, OX = LC[0] - 1024 * S, OY = LC[1] - 1000 * S;
   const toS = ([x, y]) => [OX + x * S, OY + y * S];
 
   // contorno del bosque en el paisaje general (fuera de la lupa): 5.24 y 5.34
@@ -94,7 +96,7 @@
   // contornos sobre el paisaje (debajo de la lupa)
   const land = el('g', {}, g5);
   contour(land, 'c_bosque', FOREST, C_FIS, false);
-  label(land, 'l_com', 900, 250, 'Comunidades', C_FIS);
+  label(land, 'l_com', 930, 245, 'Comunidades', C_FIS);
   contour(land, 'c_eco', FOREST, C_FUN, false);
   label(land, 'l_eco', 1180, 255, 'Ciclo hidrológico, producción de biomasa, etc.', C_FUN);
 
@@ -110,17 +112,17 @@
   contour(inside, 'c_conejos', [[150, 1195], [300, 1185], [425, 1395], [590, 1430], [600, 1585], [260, 1605], [165, 1480], [125, 1330]], C_FIS);
   contour(inside, 'c_lobos', [[835, 1330], [1060, 1325], [1210, 1318], [1425, 1330], [1435, 1545], [1210, 1555], [1050, 1545], [835, 1545]], C_FIS);
   contour(inside, 'c_arboles', [[790, 470], [1000, 430], [1125, 560], [1180, 830], [1385, 890], [1390, 1180], [1255, 1295], [1000, 1265], [915, 1050], [790, 905], [760, 650]], C_FIS);
-  label(inside, 'l_pobl', 590, 322, 'Poblaciones', C_FIS);
+  label(inside, 'l_pobl', ...toS([1542, 596]), 'Poblaciones', C_FIS);
 
   // 5.29–5.33 · jerarquías funcionales
   contour(inside, 'c_prod', [[0, 1175], [0, 60], [140, 30], [265, 150], [300, 380], [600, 370], [680, 225], [765, 420], [1000, 445], [1285, 205],
     [1525, 245], [1645, 330], [1825, 295], [2048, 330], [2048, 1175], [1500, 1245], [1000, 1235], [500, 1175]], C_FUN);
-  label(inside, 'l_prod', 280, 300, 'Productores primarios', C_FUN);
+  label(inside, 'l_prod', ...toS([697, 536]), 'Productores primarios', C_FUN);
   contour(inside, 'c_herb', [[160, 1180], [500, 1150], [700, 1140], [905, 1160], [905, 1335], [860, 1470], [600, 1605], [250, 1605], [150, 1420]], C_FUN);
-  label(inside, 'l_herb', 262, 712, 'Herbívoros', C_FUN);
+  label(inside, 'l_herb', ...toS([648, 1660]), 'Herbívoros', C_FUN);
   contour(inside, 'c_depr', [[850, 1345], [1050, 1335], [1420, 1322], [1640, 1395], [1862, 1398], [1885, 1560], [1550, 1628], [1280, 1618], [1050, 1565], [850, 1555]], C_FUN);
   contour(inside, 'c_depr', Array.from({ length: 10 }, (_, i) => [1145 + Math.cos(i / 10 * 6.283) * 150, 250 + Math.sin(i / 10 * 6.283) * 130]), C_FUN);
-  label(inside, 'l_depr', 560, 690, 'Depredadores', C_FUN);
+  label(inside, 'l_depr', ...toS([1460, 1600]), 'Depredadores', C_FUN);
 
   // 5.38–5.40 · jerarquías de control (flechas)
   const shorten = (a, b, k) => { const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy);
@@ -146,14 +148,14 @@
   // aro y mango de la lupa
   el('circle', { cx: LC[0], cy: LC[1], r: LR, fill: 'none', stroke: '#2b2520', 'stroke-width': 20 }, lupa);
   el('circle', { cx: LC[0], cy: LC[1], r: LR - 13, fill: 'none', stroke: '#fff', 'stroke-opacity': .22, 'stroke-width': 3 }, lupa);
-  el('path', { d: 'M641,711 L770,840', stroke: '#2b2520', 'stroke-width': 38, 'stroke-linecap': 'round' }, lupa);
-  el('path', { d: 'M668,738 L765,835', stroke: '#6b4a30', 'stroke-width': 24, 'stroke-linecap': 'round' }, lupa);
+  el('path', { d: 'M741,741 L852,852', stroke: '#2b2520', 'stroke-width': 40, 'stroke-linecap': 'round' }, lupa);
+  el('path', { d: 'M770,770 L847,847', stroke: '#6b4a30', 'stroke-width': 26, 'stroke-linecap': 'round' }, lupa);
 
   // rótulos de control, fuera de la lupa y apilados a su derecha (dentro taparían las flechas)
-  label(g5, 'l_down', 930, 500, 'Control de arriba a abajo', C_CTL);
-  label(g5, 'l_up', 930, 555, 'Control de abajo a arriba', C_CTL);
-  label(g5, 'l_comp', 930, 610, 'Competencia interespecífica', C_CTL);
-  label(g5, 'l_retro', 1060, 690, 'Retroalimentaciones compensadoras y reforzadoras', C_CTL, 30);
+  label(g5, 'l_down', 1090, 500, 'Control de arriba a abajo', C_CTL);
+  label(g5, 'l_up', 1090, 555, 'Control de abajo a arriba', C_CTL);
+  label(g5, 'l_comp', 1090, 610, 'Competencia interespecífica', C_CTL);
+  label(g5, 'l_retro', 1195, 700, 'Retroalimentaciones compensadoras y reforzadoras', C_CTL, 30);
 
   // leyenda en NE: una fila por tipo de jerarquía
   const legRow = (flag, i, color, str, isArrow) => {
@@ -172,7 +174,7 @@
     { id: '5.1', off: ['dim', 'hyp1', 'hyp2', 'ast'], on: ['glasses'] },
     { id: '5.2', on: ['lensfull'] },
     { id: '5.3', on: ['sysdark', 'def'] },
-    { id: '5.4', on: ['ax1', 'defsmall'] },
+    { id: '5.4', off: ['def'], on: ['ax1'] },
     { id: '5.5', on: ['ax2'] },
     { id: '5.6', on: ['ax3'] },
     { id: '5.7', on: ['vaso'] },

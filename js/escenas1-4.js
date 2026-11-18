@@ -268,14 +268,14 @@
 
   // ================= Escena 4 · La hipótesis =================
   const s4 = $('#s4');
-  el('rect', { width: 1600, height: 900, fill: '#f6efe2', opacity: .84 }, layer(s4, 'dim'));
-  text(layer(s4, 'hyp1'), 800, 400, 'No nos falta ciencia ni técnica.', { 'text-anchor': 'middle', 'font-size': 56, fill: '#4d4232' });
+  el('rect', { width: 1600, height: 900, fill: '#f6efe2', opacity: .92 }, layer(s4, 'dim'));
+  text(layer(s4, 'hyp1'), 800, 395, 'No nos falta ciencia ni técnica.', { 'text-anchor': 'middle', 'font-size': 66, 'font-weight': 500, fill: '#2e2416' });
   const h2 = layer(s4, 'hyp2');
-  const t2 = text(h2, 800, 495, 'Nos falta la mirada compleja.', { 'text-anchor': 'middle', 'font-size': 66, 'font-weight': 700, fill: INK });
+  const t2 = text(h2, 800, 505, 'Nos falta la mirada compleja.', { 'text-anchor': 'middle', 'font-size': 80, 'font-weight': 700, fill: '#2e2416' });
   const ast = layer(s4, 'ast');
   const xEnd = 800 + (t2.getComputedTextLength ? t2.getComputedTextLength() : 960) / 2;
-  text(ast, xEnd + 6, 478, '*', { 'font-size': 110, 'font-weight': 700, fill: '#b0662a' });
-  text(ast, xEnd - 10, 560, '*matizable', { 'text-anchor': 'middle', 'font-size': 30, 'font-style': 'italic', fill: '#b0662a' });
+  text(ast, xEnd + 8, 492, '*', { 'font-size': 120, 'font-weight': 700, fill: '#b0662a' });
+  text(ast, xEnd - 10, 580, '*matizable', { 'text-anchor': 'middle', 'font-size': 30, 'font-style': 'italic', fill: '#b0662a' });
 
   P.steps([
     { id: '1.1', off: ['veil', 'foto1', 'foto2', 'lema'], on: ['q1'] },
