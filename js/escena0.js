@@ -18,6 +18,8 @@
   // nombre del centro, sin forzar el ancho (textLength apretaba las letras hasta montarlas)
   text(t, 800, 700, 'Escuela Técnica Superior de Ingeniería de Montes, Forestal y del Medio Natural',
     { 'text-anchor': 'middle', 'font-size': 34, 'font-weight': 700, 'letter-spacing': .5, fill: '#3f3324' });
+  text(t, 800, 748, 'Universidad Politécnica de Madrid',
+    { 'text-anchor': 'middle', 'font-size': 34, 'font-weight': 700, 'letter-spacing': .5, fill: '#3f3324' });
 
   // fotos de las dos sedes, como fotos sobre la mesa
   function photo(flag, href, cx, cy, w, h, rot) {
