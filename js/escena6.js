@@ -34,9 +34,8 @@
     y += lines.length * 46 + 30;
   });
 
-  // 6.1 · vuelve la vista sistémica del inicio de la escena 5: se apaga todo lo que encendió la escena 5 salvo las gafas
-  const keep = new Set(['glasses', 'lensfull']);
-  const s5flags = [...new Set(P.STEPS.filter(s => s.id.startsWith('5.')).flatMap(s => s.on || []))].filter(f => !keep.has(f));
+  // 6.1 · vuelve el paisaje tal como estaba antes de la escena 5 (sin gafas): se apaga todo lo que encendió la escena 5
+  const s5flags = [...new Set(P.STEPS.filter(s => s.id.startsWith('5.')).flatMap(s => s.on || []))];
 
   P.steps([
     { id: '6.1', off: s5flags },
