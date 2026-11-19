@@ -61,21 +61,22 @@
   const o1 = layer(g11, 'o1');
   blob(o1, 380, 395, 120, 48, '#7fbf4a', '#cdeea0');
   blob(o1, 720, 322, 105, 42, '#7fbf4a', '#cdeea0');
-  label(o1, 550, 438, 'Repoblación mantenida por el Ayuntamiento');
+  label(o1, 610, 438, 'Repoblación mantenida por el Ayuntamiento');
 
   // 11.13 · repoblación de la empresa X
   const o2 = layer(g11, 'o2');
   blob(o2, 1060, 420, 95, 38, '#4db6c4', '#b5eef5');
-  label(o2, 1060, 466, ['Repoblación financiada por la empresa X', 'para compensar emisiones']);
+  label(o2, 1100, 300, ['Repoblación financiada por la empresa X', 'para compensar emisiones']);
 
   // 11.14 · las repoblaciones como centros de dispersión de semillas: tres flechas curvas desde cada una, sin rótulo
   { const m = el('marker', { id: 'arrSeed11', viewBox: '0 0 10 10', refX: 7, refY: 5, markerWidth: 4.5, markerHeight: 4.5, orient: 'auto-start-reverse' }, defs);
     el('path', { d: 'M0,0 L10,5 L0,10 z', fill: '#d6f5a8' }, m); }
   const seeds = layer(g11, 'seeds');
-  [[[380, 395, 120, 48], [195, 248, 300]], [[720, 322, 105, 42], [200, 262, 330]], [[1060, 420, 95, 38], [195, 265, 340]]].forEach(([[cx, cy, rx, ry], angs]) =>
+  // todas hacia abajo (hacia el territorio), sin tocar los rótulos: [mancha, ángulos (0° = este, 90° = abajo), longitud]
+  [[[380, 395, 120, 48], [125, 148, 168], 55], [[720, 322, 105, 42], [55, 90, 125], 46], [[1060, 420, 95, 38], [45, 90, 135], 55]].forEach(([[cx, cy, rx, ry], angs, len]) =>
     angs.forEach((a, k) => {
       const t = a * Math.PI / 180, c = Math.cos(t), s = Math.sin(t);
-      const A = [cx + rx * .95 * c, cy + ry * .95 * s], B = [A[0] + 62 * c, A[1] + 62 * s];   // misma longitud para todas
+      const A = [cx + rx * .95 * c, cy + ry * .95 * s], B = [A[0] + len * c, A[1] + len * s];
       const p = el('path', { d: P.arc(A, B, k % 2 ? -.35 : .35), fill: 'none', stroke: '#d6f5a8', 'stroke-width': 3.5, 'stroke-linecap': 'round',
         'marker-end': 'url(#arrSeed11)', class: 'draw', 'data-on': 'seeds', pathLength: 1 }, seeds);
       p.style.setProperty('--d', (k * .15) + 's');
