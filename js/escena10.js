@@ -142,7 +142,12 @@
   titleBand('titOstrom', 'Ostrom nos propondría alternativas de gobernanza que reducirían los problemas anteriores', 'Gobierno policéntrico');
 
   // ---- Ellos ya lo intuían (10.45–10.50) ----
-  titleBand('titEmp', 'Buena parte de las críticas anteriores ya estaban presentes de manera empírica...');
+  { // título largo: dos líneas en ámbar, con la misma banda que el 10.27
+    const g = layer(g10, 'titEmp');
+    el('rect', { x: 0, y: 30, width: 1600, height: 140, fill: DARK, opacity: .8 }, g);
+    ['Buena parte de las críticas anteriores ya las habían apuntado,', 'con sutileza, ilustres ingenieros de la época']
+      .forEach((l, k) => text(g, 800, 88 + k * 48, l, { ...mid, 'font-size': 34, 'font-weight': 700, fill: AMBER }));
+  }
   el('rect', { x: 110, y: 205, width: 1380, height: 380, rx: 24, fill: DARK, opacity: .85 }, layer(g10, 'panelEmp'));
   [['e46', 'En 1939, Ceballos y Ximénez de Embún redactaron un plan mucho más integrador.', 280],
    ['e47', 'Se aplicó uno más centrado en pocos objetivos.', 345],

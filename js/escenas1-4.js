@@ -49,6 +49,7 @@
     el('path', { d: 'M13,-18 L12,-22 L15,-19 Z', fill: c }, g);
     el('path', { d: 'M-10,-12 Q-16,-16 -15,-21', stroke: c, 'stroke-width': 2.4, fill: 'none', 'stroke-linecap': 'round' }, g);
   };
+  P.fig = { limb, shade, head, sheep, dog, SKIN, INK2 };   // se reutilizan en la escena 11
   const tag = (p, str, y = 14) => {
     const w = str.length * 10.5 + 22;
     el('rect', { x: -w / 2, y, width: w, height: 25, rx: 12.5, fill: '#fffaf0', opacity: .92, class: 'ptag' }, p);
