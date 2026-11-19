@@ -179,7 +179,7 @@
     const m = el('marker', { id, viewBox: '0 0 10 10', refX: 7, refY: 5, markerWidth: px, markerHeight: px, markerUnits: 'userSpaceOnUse', orient: 'auto-start-reverse' }, defs);
     el('path', { d: 'M0,0 L10,5 L0,10 z', fill: color }, m);
   };
-  markerPx('arrSubA', CREAM, 30); markerPx('arrSubB', CREAM, 20); markerPx('arrSubC', CREAM, 15); markerPx('arrSubD', CREAM, 12);
+  markerPx('arrSubA', CREAM, 42); markerPx('arrSubB', CREAM, 20); markerPx('arrSubC', CREAM, 15); markerPx('arrSubD', CREAM, 12);
   const C_SUELO = '#e07a5f', C_PLANT = '#b5f23d', C_ANIM = '#c77dff', C_ENC = '#4d8dff', C_MAT = '#f15bb5';
 
   // mancha semitransparente; pts en coordenadas de la imagen de la lupa (isImg) o de la pantalla
@@ -218,20 +218,26 @@
   patch(subOut, 'm_enc', FOREST, C_ENC, false);
   el('path', { d: 'M' + MAT.map(p => p.join(',')).join(' L') + ' Z', fill: C_MAT, 'fill-opacity': .38, stroke: C_MAT, 'stroke-width': 3,
     'stroke-linejoin': 'round', class: 'L', 'data-on': 'm_mat' }, subOut);
-  label(g5, 'l_enc', 985, 590, 'Encinar', C_ENC, 26);
+  label(g5, 'l_enc', 905, 598, 'Encinar', C_ENC, 26);
   label(g5, 'l_mat', 1340, 578, 'Matorral de alta montaña', C_MAT, 26);
 
   // 5.57 · interacciones fuertes dentro de cada subsistema
-  biArrow(subIn, 'a_sub', [300, 802], [600, 802], .08, 7, 'arrSubA');
-  biArrow(subIn, 'a_sub', toS([380, 820]), toS([1500, 820]), -.12, 7, 'arrSubA', .2);
-  biArrow(subIn, 'a_sub', toS([620, 1480]), toS([1450, 1470]), .1, 7, 'arrSubA', .4);
-  biArrow(g5, 'a_sub', [895, 520], [1000, 440], .25, 7, 'arrSubA', .6);
-  biArrow(g5, 'a_sub', [1170, 440], [1500, 520], -.1, 7, 'arrSubA', .8);
-  // 5.58–5.60 · interacciones débiles entre subsistemas, cada vez más finas
-  const weak = el('g', {}, g5);
-  biArrow(weak, 'a_w1', toS([1720, 780]), [950, 545], .18, 3.2, 'arrSubB');
-  biArrow(weak, 'a_w2', toS([1500, 330]), [1080, 410], -.2, 2, 'arrSubC');
-  biArrow(weak, 'a_w3', toS([1600, 560]), [1420, 318], -.06, 1.2, 'arrSubD');
+  biArrow(subIn, 'a_sub', [300, 802], [600, 802], .08, 13, 'arrSubA');
+  biArrow(subIn, 'a_sub', toS([380, 820]), toS([1500, 820]), -.12, 13, 'arrSubA', .2);
+  biArrow(subIn, 'a_sub', toS([620, 1480]), toS([1450, 1470]), .1, 13, 'arrSubA', .4);
+  biArrow(g5, 'a_sub', [985, 562], [1130, 566], -.15, 13, 'arrSubA', .6);
+  biArrow(g5, 'a_sub', [1170, 440], [1500, 520], -.1, 13, 'arrSubA', .8);
+  // 5.58–5.60 · interacciones débiles entre subsistemas, cada vez más finas;
+  // todas salen del mismo punto de la lupa y van rectas, en abanico, para que no se crucen
+  const weak = el('g', {}, g5), W0 = [760, 420];
+  const fromW0 = to => { const dx = to[0] - W0[0], dy = to[1] - W0[1], L = Math.hypot(dx, dy); return [W0[0] + dx / L * 24, W0[1] + dy / L * 24]; };
+  [['a_w1', [935, 505], 3.2, 'arrSubB'],     // encinar
+   ['a_w2', [1130, 395], 2, 'arrSubC'],      // matorral de alta montaña
+   ['a_w3', [1430, 290], 1.2, 'arrSubD']]    // montañas lejanas
+    .forEach(([f, to, w, mk]) => {
+      el('circle', { cx: W0[0], cy: W0[1], r: 9, fill: CREAM, stroke: '#14100b', 'stroke-width': 2, class: 'L', 'data-on': f }, weak);
+      biArrow(weak, f, fromW0(to), to, 0, w, mk);
+    });
 
   // 5.61 · la ley, a la derecha de la lupa
   const law = layer(g5, 'ley');
