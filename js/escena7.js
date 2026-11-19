@@ -22,7 +22,8 @@
   band('tsiglos', ['No. Llevamos siglos combinando saberes empíricos', 'con avances científicos para mejorar nuestra forma de gestión']);
 
   // 7.5 · acequia: sale del barranco central y corre hacia la izquierda, casi a nivel
-  const AQ = [[805, 428], [760, 440], [700, 452], [630, 458], [555, 470], [480, 486], [410, 494], [340, 490], [270, 482], [200, 488], [130, 502], [70, 512]];
+  // trazado original (805→70) acortado por el oeste y desplazado 92 px (≈ 1/8 de su longitud) hacia el oeste
+  const AQ = [[805, 428], [760, 440], [700, 452], [630, 458], [555, 470], [480, 486], [410, 494], [340, 490], [270, 482], [200, 488]].map(([x, y]) => [x - 92, y]);
   const strip = [...AQ.map(([x, y], i) => [x, y + 6]),
     ...AQ.slice().reverse().map(([x, y], i) => [x, y + 34 + 16 * Math.sin(i * 1.7) + (i % 3) * 6])];
   const aqG = layer(g7, 'acequia');
@@ -31,7 +32,7 @@
   const dq = line(AQ), dr = layer(aqG, 'acequia', 'draw');
   el('path', { d: dq, stroke: '#2a1c10', 'stroke-width': 9, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: .55, pathLength: 1 }, dr);
   el('path', { d: dq, stroke: '#5fb8e8', 'stroke-width': 5, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', pathLength: 1 }, dr);
-  pill(layer(aqG, 'acequia', 'L', 1.2), 640, 578, 'Acequias como infraestructura de gestión', { size: 24 }).setAttribute('class', 'ptag');
+  pill(layer(aqG, 'acequia', 'L', 1.2), 548, 578, 'Acequias como infraestructura de gestión', { size: 24 }).setAttribute('class', 'ptag');
 
   // 7.6 · dehesa: mancha verdosa dentro del triángulo ganado–caza–setas
   const dG = layer(g7, 'dehesa');
