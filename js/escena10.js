@@ -1,4 +1,4 @@
-// Escena 10 · Primer reto: las repoblaciones (10.1–10.35)
+// Escena 10 · Primer reto: las repoblaciones (10.1–10.50)
 // 10.5 hace aparecer el panel de las características; 10.14 y 10.19 son clics sin cambio visual.
 (() => {
   const { $, el, layer, text, arc, pill } = P;
@@ -51,21 +51,21 @@
     .forEach((s, i) => bullet('neg' + (i + 1), 210, 542 + i * 50, s, 29, BAD));
 
 
-  // ================= Con las gafas puestas (10.26–10.35) =================
+  // ================= Con las gafas puestas (10.26–10.50) =================
   // 10.26 · las gafas aparecen y se abren de golpe (como 5.1–5.2) y el paisaje se oscurece un poco (como 5.3)
   { const v = layer(g10, 'gl10', 'L', 2.2); g10.insertBefore(v, g10.firstChild);   // por debajo de los rótulos
     el('rect', { width: 1600, height: 900, fill: DARK, opacity: .5 }, v); }
   const defs = $('#defs');
   const mk = (id, color) => { const m = el('marker', { id, viewBox: '0 0 10 10', refX: 7, refY: 5, markerWidth: 5, markerHeight: 5, orient: 'auto-start-reverse' }, defs);
     el('path', { d: 'M0,0 L10,5 L0,10 z', fill: color }, m); };
-  mk('arrBad10', BAD); mk('arrAmb10', AMBER);
+  mk('arrBad10', BAD); mk('arrAmb10', AMBER); mk('arrEst10', '#a9d2f0'); mk('arrCr10', CREAM);
 
-  // 10.27 · título arriba y, debajo, cuadro de diales: uno al máximo y el resto a cero (quietos)
+  // 10.27 · título arriba; 10.28 · cuadro de diales: uno al máximo y el resto a cero (quietos)
   const tt = layer(g10, 'tit10');
   el('rect', { x: 0, y: 30, width: 1600, height: 140, fill: DARK, opacity: .8 }, tt);
   text(tt, 800, 88, 'Dörner y Meadows criticarían poner el foco en maximizar pocos componentes del sistema', { ...mid, 'font-size': 35, 'font-weight': 700, fill: AMBER });
   text(tt, 800, 140, 'Esto genera hipertrofias y atrofias que hacen el sistema poco sostenible', { ...mid, 'font-size': 29, 'font-weight': 500, fill: CREAM });
-  const dl = layer(g10, 'dials', 'L', 1);
+  const dl = layer(g10, 'dials');
   el('rect', { x: 170, y: 690, width: 1260, height: 192, rx: 22, fill: DARK, opacity: .85 }, dl);
   const DIALS = [['Suelo y madera', 84, 84], ['Biodiversidad', -84, -84], ['Pastos y ganado', -84, -84],
                  ['Empleo local', -84, -84], ['Resiliencia', -84, -84]];
@@ -80,56 +80,78 @@
     text(dl, cx, DY + 46, lab, { ...mid, 'font-size': 23, 'font-weight': main ? 800 : 500, fill: main ? AMBER : CREAM });
   });
 
-  // 10.28 · rótulos de los efectos de segundo orden sobre el pinar (sin flechas)
+  // 10.29 · rótulos de los efectos de segundo orden sobre el pinar (sin flechas)
   const ef = layer(g10, 'efectos');
   [[[560, 470], 'plagas'], [[880, 380], 'incendios'], [[1200, 540], 'abandono rural']].forEach(([to, lab]) =>
     pill(ef, to[0], to[1], lab, { size: 30, bg: '#5a1f12', color: '#ffd9c8' }));
 
-  // 10.30 · decisión balística: parábola que entra desde fuera del encuadre y cae en la ladera
-  const bal = layer(g10, 'balis');
-  const LAND = [720, 600];
-  el('path', { d: `M-40,330 Q330,-170 ${LAND[0]},${LAND[1]}`, stroke: AMBER, 'stroke-width': 6, fill: 'none', 'stroke-dasharray': '18 12', 'marker-end': 'url(#arrAmb10)' }, bal);
-  [34, 22].forEach((r, k) => el('ellipse', { cx: LAND[0], cy: LAND[1] + 8, rx: r * 1.6, ry: r * .55, fill: 'none', stroke: AMBER, 'stroke-width': 3, opacity: k ? .9 : .5 }, bal));
-  pill(bal, 360, 660, 'decisión balística (tirarse un triple)', { size: 30, bg: DARK, color: AMBER });
+  // título de bloque con el estilo del 10.27 (banda arriba, título ámbar y subtítulo crema)
+  const titleBand = (flag, t1, t2) => {
+    const g = layer(g10, flag);
+    el('rect', { x: 0, y: 30, width: 1600, height: 140, fill: DARK, opacity: .8 }, g);
+    text(g, 800, t2 ? 88 : 112, t1, { ...mid, 'font-size': 34, 'font-weight': 700, fill: AMBER });
+    if (t2) text(g, 800, 140, t2, { ...mid, 'font-size': 29, 'font-weight': 500, fill: CREAM });
+  };
 
-  // 10.31 · las consecuencias no las sufren los decisores: flecha larga que sale hacia «Madrid»
-  const mad = layer(g10, 'madrid');
-  el('path', { d: arc([LAND[0] + 40, LAND[1] - 20], [1585, 236], -.12), stroke: CREAM, 'stroke-width': 5, fill: 'none', 'marker-end': 'url(#arrAmb10)', 'stroke-dasharray': '4 0' }, mad);
-  pill(mad, 1580, 200, 'Madrid', { size: 32, anchor: 'end', bg: DARK, color: CREAM });
-
-  // 10.32 · exceso de control central: un nodo conectado a todas las decisiones
-  const cc = layer(g10, 'central');
-  const C = [800, 500], SAT = [[[400, 330], '¿Dónde plantar?'], [[1200, 330], '¿Qué especies?'], [[400, 690], '¿Qué usos?'], [[1200, 690], '¿Cómo involucrar?']];
-  SAT.forEach(([p]) => el('line', { x1: C[0], y1: C[1], x2: p[0], y2: p[1], stroke: AMBER, 'stroke-width': 4, opacity: .85 }, cc));
-  SAT.forEach(([p, lab]) => pill(cc, p[0], p[1] + 10, lab, { size: 30, bg: DARK, color: CREAM }));
-  el('circle', { cx: C[0], cy: C[1], r: 92, fill: '#3a2a14', stroke: AMBER, 'stroke-width': 5 }, cc);
-  text(cc, C[0], C[1] - 6, 'Control', { ...mid, 'font-size': 32, 'font-weight': 800, fill: AMBER });
-  text(cc, C[0], C[1] + 30, 'central', { ...mid, 'font-size': 32, 'font-weight': 800, fill: AMBER });
-
-  // 10.34 · gobierno policéntrico: el nodo se divide en círculos anidados
-  const pc = layer(g10, 'anidados');
-  el('circle', { cx: C[0], cy: C[1], r: 250, fill: '#24303a', 'fill-opacity': .82, stroke: '#7fb3d9', 'stroke-width': 5 }, pc);
-  text(pc, C[0], C[1] - 178, 'Estado', { ...mid, 'font-size': 36, 'font-weight': 800, fill: '#a9d2f0' });
-  text(pc, C[0], C[1] - 140, 'escala · dinero · técnica', { ...mid, 'font-size': 27, 'font-weight': 500, fill: CREAM });
-  el('circle', { cx: C[0], cy: C[1] + 40, r: 130, fill: '#2f3a1e', 'fill-opacity': .9, stroke: GOOD, 'stroke-width': 5 }, pc);
-  text(pc, C[0], C[1] + 22, 'Comunidad', { ...mid, 'font-size': 34, 'font-weight': 800, fill: GOOD });
-  text(pc, C[0], C[1] + 60, 'reglas · vigilancia', { ...mid, 'font-size': 26, 'font-weight': 500, fill: CREAM });
-  text(pc, C[0], C[1] + 92, 'memoria', { ...mid, 'font-size': 26, 'font-weight': 500, fill: CREAM });
-
-  // 10.35 · el peso del pasado: bancales y carboneras reaparecen bajo el pinar
-  const pas = layer(g10, 'pasado');
-  for (let k = 0; k < 6; k++) {
-    const y0 = 455 + k * 38, x0 = 170 + k * 12, x1 = 660 - k * 6;
-    const d = `M${x0},${y0 + 18} C${x0 + 140},${y0 + 4} ${x1 - 200},${y0 - 24} ${x1},${y0 - 30}`;
-    el('path', { d, stroke: '#3a2614', 'stroke-width': 7, fill: 'none', opacity: .55, transform: 'translate(0,4)' }, pas);
-    el('path', { d, stroke: '#e8c48c', 'stroke-width': 4, fill: 'none', 'stroke-dasharray': '10 5', opacity: .95 }, pas);
-  }
-  [[960, 520], [1080, 470], [1010, 610], [1180, 560]].forEach(([x, y]) => {
-    el('ellipse', { cx: x, cy: y, rx: 34, ry: 13, fill: '#1e1610', stroke: '#8a6a44', 'stroke-width': 3 }, pas);
-    el('ellipse', { cx: x, cy: y - 2, rx: 18, ry: 6, fill: '#3b2c1f' }, pas);
+  // ---- Meadows y Dörner (10.32–10.36) ----
+  titleBand('titMead', 'Meadows diría que la forma de decidir lo que se hizo peca de exceso de control central');
+  // 10.33 · nodo «Estado», lejos del bosque (arriba a la derecha)
+  const E = [1440, 330], ER = 78;
+  const est = layer(g10, 'estado');
+  el('circle', { cx: E[0], cy: E[1], r: ER, fill: '#24303a', stroke: '#7fb3d9', 'stroke-width': 5 }, est);
+  text(est, E[0], E[1] + 12, 'Estado', { ...mid, 'font-size': 34, 'font-weight': 800, fill: '#a9d2f0' });
+  // 10.34 · flechas a las cuatro decisiones
+  const fq = layer(g10, 'estQ');
+  const toward = (from, to, d) => { const dx = to[0] - from[0], dy = to[1] - from[1], L = Math.hypot(dx, dy); return [from[0] + dx / L * d, from[1] + dy / L * d]; };
+  // rótulos cerca del Estado, con letra algo menor
+  [[[1440, 212], '¿Dónde plantar?'], [[1195, 248], '¿Qué especies?'], [[1215, 452], '¿Qué usos?'], [[1455, 466], '¿Cómo evaluar?']].forEach(([q, lab]) => {
+    el('path', { d: `M${toward(E, q, ER + 4)} L${toward(q, E, 24)}`, stroke: '#a9d2f0', 'stroke-width': 3.5, fill: 'none', 'marker-end': 'url(#arrEst10)' }, fq);
+    pill(fq, q[0], q[1] + 8, lab, { size: 24, bg: DARK, color: CREAM });
   });
-  pill(pas, 420, 420, 'bancales', { size: 30, bg: DARK, color: '#f0d4a4' });
-  pill(pas, 1070, 420, 'carboneras', { size: 30, bg: DARK, color: '#f0d4a4' });
+  // 10.35 · decisión balística: flecha del Estado al centro del bosque, con círculos concéntricos
+  const LAND = [800, 470];
+  const bal = layer(g10, 'balis');
+  el('path', { d: `M${E[0] - ER},${E[1]} Q1080,230 ${LAND[0] + 20},${LAND[1] - 14}`, stroke: AMBER, 'stroke-width': 6, fill: 'none', 'stroke-dasharray': '18 12', 'marker-end': 'url(#arrAmb10)' }, bal);
+  [34, 22].forEach((r, k) => el('ellipse', { cx: LAND[0], cy: LAND[1] + 8, rx: r * 1.6, ry: r * .55, fill: 'none', stroke: AMBER, 'stroke-width': 3, opacity: k ? .9 : .5 }, bal));
+  pill(bal, 610, 545, 'Decisión balística', { size: 30, bg: DARK, color: AMBER });
+  // 10.36 · del punto de caída al pueblo: las consecuencias no las sufren los que deciden
+  const pu = layer(g10, 'alPueblo');
+  el('path', { d: arc([LAND[0] + 40, LAND[1] + 14], [1220, 700], -.18), stroke: BAD, 'stroke-width': 5, fill: 'none', 'marker-end': 'url(#arrBad10)' }, pu);
+  // rótulo en dos líneas centradas, por debajo de la flecha
+  el('rect', { x: 620, y: 600, width: 400, height: 84, rx: 22, fill: '#5a1f12', opacity: .85 }, pu);
+  text(pu, 820, 634, 'Los que deciden', { ...mid, 'font-size': 28, 'font-weight': 600, fill: '#ffd9c8' });
+  text(pu, 820, 670, 'no sufren las consecuencias', { ...mid, 'font-size': 28, 'font-weight': 600, fill: '#ffd9c8' });
+
+  // ---- Ostrom: gobierno policéntrico (10.38–10.43) ----
+  const EQ = E, EQR = ER;                           // el Estado: mismo círculo y posición que en 10.33
+  const eq = layer(g10, 'estQuarter');
+  el('circle', { cx: EQ[0], cy: EQ[1], r: EQR, fill: '#24303a', stroke: '#7fb3d9', 'stroke-width': 5 }, eq);
+  text(eq, EQ[0], EQ[1] + 12, 'Estado', { ...mid, 'font-size': 34, 'font-weight': 800, fill: '#a9d2f0' });
+  // sus atributos, alrededor del círculo (dentro no caben a un tamaño legible)
+  const eqw = layer(g10, 'estWords');
+  [['escala', 1440, 212], ['dinero', 1295, 330], ['ciencia-técnica', 1440, 466]].forEach(([w, x, y]) =>
+    pill(eqw, x, y + 8, w, { size: 24, bg: '#24303a', color: '#cfe6f7' }));
+  const CM = [990, 690], CMR = 125;                 // la comunidad, junto al pueblo
+  const cm = layer(g10, 'comunidad');
+  el('circle', { cx: CM[0], cy: CM[1], r: CMR, fill: '#2f3a1e', 'fill-opacity': .9, stroke: GOOD, 'stroke-width': 5 }, cm);
+  text(cm, CM[0], CM[1] - 42, 'Comunidad', { ...mid, 'font-size': 32, 'font-weight': 800, fill: GOOD });
+  const cmw = layer(g10, 'comWords');
+  ['reglas', 'vigilancia', 'memoria'].forEach((w, k) => text(cmw, CM[0], CM[1] + 2 + k * 34, w, { ...mid, 'font-size': 27, 'font-weight': 500, fill: CREAM }));
+  const lk = layer(g10, 'enlace');
+  el('path', { d: `M${toward(CM, EQ, CMR + 10)} L${toward(EQ, CM, EQR + 14)}`, stroke: CREAM, 'stroke-width': 6, fill: 'none', 'marker-start': 'url(#arrCr10)', 'marker-end': 'url(#arrCr10)' }, lk);
+  titleBand('titOstrom', 'Ostrom nos propondría alternativas de gobernanza que reducirían los problemas anteriores', 'Gobierno policéntrico');
+
+  // ---- Ellos ya lo intuían (10.45–10.50) ----
+  titleBand('titEmp', 'Buena parte de las críticas anteriores ya estaban presentes de manera empírica...');
+  el('rect', { x: 110, y: 205, width: 1380, height: 380, rx: 24, fill: DARK, opacity: .85 }, layer(g10, 'panelEmp'));
+  [['e46', 'En 1939, Ceballos y Ximénez de Embún redactaron un plan mucho más integrador.', 280],
+   ['e47', 'Se aplicó uno más centrado en pocos objetivos.', 345],
+   ['e48', 'Algunas citas de Ceballos y Ximénez de Embún:', 410]].forEach(([f, str, y]) => bullet(f, 220, y, str, 32, AMBER));
+  [['e49', '«Repoblar mucho como sea y donde sea, pero mucho»', 480], ['e50', '«Organización sindical de la propiedad»', 545]].forEach(([f, str, y]) => {
+    const g = layer(g10, f);
+    el('rect', { x: 290, y: y - 34, width: 6, height: 44, fill: AMBER }, g);
+    text(g, 314, y, str, { 'font-size': 34, 'font-weight': 600, 'font-style': 'italic', fill: AMBER });
+  });
 
   const s9 = ['viaje', 'reto1', 'reto2', 'capitan', 'bocadillo', 'v8dark'];
   const people = ['p_lena', 'p_past', 'p_caza', 'p_seta', 'p_ocio'];
@@ -160,14 +182,29 @@
     { id: '10.24', off: ['panel10b', 'hpos', 'pos1', 'pos2', 'pos3', 'hneg', 'neg1', 'neg2', 'neg3', 'neg4'] },
     { id: '10.25', off: ['t1011'], on: ['t1025'] },
     { id: '10.26', off: ['band10', 't1025'], on: ['gl10'] },
-    { id: '10.27', on: ['tit10', 'dials'] },
-    { id: '10.28', on: ['efectos'] },
-    { id: '10.29' },                                   // los diales se quedan quietos
-    { id: '10.30', off: ['tit10', 'dials', 'efectos'], on: ['balis'] },
-    { id: '10.31', on: ['madrid'] },
-    { id: '10.32', off: ['balis', 'madrid'], on: ['central'] },
-    { id: '10.33' },
-    { id: '10.34', off: ['central'], on: ['anidados'] },
-    { id: '10.35', off: ['anidados'], on: ['pasado'] },
+    { id: '10.27', on: ['tit10'] },
+    { id: '10.28', on: ['dials'] },
+    { id: '10.29', on: ['efectos'] },
+    { id: '10.30' },                                   // los diales se quedan quietos
+    { id: '10.31', off: ['tit10', 'dials', 'efectos'] },
+    { id: '10.32', on: ['titMead'] },
+    { id: '10.33', on: ['estado'] },
+    { id: '10.34', on: ['estQ'] },
+    { id: '10.35', on: ['balis'] },
+    { id: '10.36', on: ['alPueblo'] },
+    { id: '10.37', off: ['titMead', 'estado', 'estQ', 'balis', 'alPueblo'] },
+    { id: '10.38', on: ['titOstrom'] },
+    { id: '10.39', on: ['estQuarter'] },
+    { id: '10.40', on: ['estWords'] },
+    { id: '10.41', on: ['comunidad'] },
+    { id: '10.42', on: ['comWords'] },
+    { id: '10.43', on: ['enlace'] },
+    { id: '10.44', off: ['titOstrom', 'estQuarter', 'estWords', 'comunidad', 'comWords', 'enlace'] },
+    { id: '10.45', on: ['titEmp'] },
+    { id: '10.46', on: ['panelEmp', 'e46'] },
+    { id: '10.47', on: ['e47'] },
+    { id: '10.48', on: ['e48'] },
+    { id: '10.49', on: ['e49'] },
+    { id: '10.50', on: ['e50'] },
   ]);
 })();
